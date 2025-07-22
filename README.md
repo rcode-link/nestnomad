@@ -133,12 +133,21 @@ The Rental Property Management System is open-source software licensed under the
 4. **Blade Templates**: Use Blade templating for views. Keep templates clean and avoid complex logic in views.
 
 ### Filament PHP Standards
+To maintain a consistent structure in your Filament project, utilize Filament's Artisan commands for generating components. Here are some key commands:
 
-1. **Resource Classes**: Organize Filament resources in the `app/Filament/Resources` directory. Each resource should have a corresponding model and follow Filament's conventions.
+- **Creating a New Resource**:
+  Use the command `php artisan make:filament-resource ResourceName`.
+  This will set up the necessary files in the `app/Filament/Resources` directory.
 
-2. **Forms and Tables**: Use Filament's form and table builders to create consistent and reusable components. Customize fields and columns as needed for your application.
+- **Generating Widgets**:
+  You can generate widgets with the command `php artisan make:filament-widget WidgetName`.
+  These will be placed in the `app/Filament/Widgets` directory.
 
-3. **Widgets**: Create custom widgets for dashboards and other reusable components. Place widget classes in the `app/Filament/Widgets` directory.
+- **Creating Custom Pages**:
+  For custom pages, use the command `php artisan make:filament-page PageName`.
+  This ensures they are correctly organized within the `app/Filament/Pages` directory.
+
+By adhering to these practices, you help keep your project organized and scalable.
 
 ### JavaScript and CSS Standards
 
