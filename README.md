@@ -147,8 +147,6 @@ To maintain a consistent structure in your Filament project, utilize Filament's 
   For custom pages, use the command `php artisan make:filament-page PageName`.
   This ensures they are correctly organized within the `app/Filament/Pages` directory.
 
-By adhering to these practices, you help keep your project organized and scalable.
-
 ### JavaScript and CSS Standards
 
 1. **ES6 Compliance**: Use modern JavaScript (ES6+) for frontend code. Use tools like ESLint to enforce coding standards.
