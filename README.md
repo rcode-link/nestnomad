@@ -71,6 +71,10 @@ The Rental Property Management System is a comprehensive platform designed for m
 
 Access the application in your web browser at `http://localhost:8000`. Register as a landlord or tenant to start managing properties, expenses, issues, and contracts.
 
+***Default user***: 
+ - email: `user@email.com`
+ - password: `Password_123`
+
 ### Configuration
 
 - **DocuSign Integration**: Configure your DocuSign API credentials in the `.env` file to enable electronic signatures.
