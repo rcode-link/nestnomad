@@ -166,7 +166,7 @@ The Rental Property Management System is open-source software licensed under the
 
 ### Testing Standards
 
-1. **PHPUnit**: Write unit and feature tests using PHPUnit. Place tests in the `tests` directory and follow Laravel's testing conventions.
+1. **Pest**: Write unit and feature tests using Pest, a more expressive and modern testing framework for PHP. Place tests in the tests directory and follow Laravel's testing conventions with Pest's syntax. 
 
 2. **Test Coverage**: Aim for high test coverage, especially for critical business logic. Use tools like PHPUnit's coverage reports to identify untested code.
 
