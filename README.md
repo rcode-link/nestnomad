@@ -29,15 +29,14 @@ The Rental Property Management System is a comprehensive platform designed for m
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/your-repository/rental-property-management.git
-   cd rental-property-management
+   git clone git@github.com:rcode-link/nestnomad.git
+   cd nestnomad
    ```
 
 2. **Install Dependencies**
 
    ```bash
    composer install
-   npm install
    ```
 
 3. **Environment Configuration**
@@ -62,13 +61,7 @@ The Rental Property Management System is a comprehensive platform designed for m
    php artisan migrate --seed
    ```
 
-5. **Compile Assets**
-
-   ```bash
-   npm run dev
-   ```
-
-6. **Serve the Application**
+5. **Serve the Application**
 
    ```bash
    php artisan serve
