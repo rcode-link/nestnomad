@@ -1,14 +1,8 @@
 FROM node:lts-alpine3.22 AS node_build
-
 WORKDIR /app
-
 COPY . .
-
 RUN npm install
-
 RUN npm run build
-
-RUN rm -rf node_modules
 
 
 FROM unit:1.34.1-php8.3
