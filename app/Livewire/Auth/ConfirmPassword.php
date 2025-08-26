@@ -8,7 +8,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('components.layouts.auth')]
-class ConfirmPassword extends Component
+final class ConfirmPassword extends Component
 {
     public string $password = '';
 
@@ -21,7 +21,7 @@ class ConfirmPassword extends Component
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::guard('web')->validate([
+        if ( ! Auth::guard('web')->validate([
             'email' => Auth::user()->email,
             'password' => $this->password,
         ])) {

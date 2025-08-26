@@ -9,7 +9,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('components.layouts.auth')]
-class VerifyEmail extends Component
+final class VerifyEmail extends Component
 {
     /**
      * Send an email verification notification to the user.

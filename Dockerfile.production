@@ -1,4 +1,4 @@
-FROM unit:1.34.1-php8.3
+FROM unit:php8.4
 
 ENV NVM_DIR=/root/.nvm
 ENV NODE_VERSION=20.11.1

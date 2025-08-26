@@ -8,7 +8,7 @@ use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
-class Password extends Component
+final class Password extends Component
 {
     public string $current_password = '';
 
