@@ -6,6 +6,8 @@ use App\Filament\Resources\Properties\Pages\CreateProperty;
 use App\Filament\Resources\Properties\Pages\EditProperty;
 use App\Filament\Resources\Properties\Pages\ListProperties;
 use App\Filament\Resources\Properties\Pages\ViewProperty;
+use App\Filament\Resources\Properties\RelationManagers\PropertiesRelationManager;
+use App\Filament\Resources\Properties\RelationManagers\TenantsRelationManager;
 use App\Filament\Resources\Properties\Schemas\PropertyForm;
 use App\Filament\Resources\Properties\Schemas\PropertyInfolist;
 use App\Filament\Resources\Properties\Tables\PropertiesTable;
@@ -42,7 +44,6 @@ final class PropertyResource extends Resource
     public static function getRelations(): array
     {
         return [
-
         ];
     }
 

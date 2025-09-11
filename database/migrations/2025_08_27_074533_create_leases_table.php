@@ -10,12 +10,14 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('expenses', function (Blueprint $table): void {
+        Schema::create('leases', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('property_id')->references('id')->on('properties');
-            $table->foreignId('payment_id')->nullable()->references('id')->on('pamynets');
-            $table->string('status');
-            $table->integer('amout');
+            $table->foreignId('user_id')->nullable();
+            $table->date('start_of_lease');
+            $table->date('end_of_lease')->nullable();
+            $table->longText('contract')->nullable();
+            $table->string('tenant_name', 255);
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('expenses');
+        Schema::dropIfExists('leases');
     }
 };

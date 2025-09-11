@@ -10,13 +10,10 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('pamynets', function (Blueprint $table): void {
+        Schema::create('user_property', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('property_id')->references('id')->on('properties');
-            $table->string('status');
-            $table->integer('amout');
-            $table->timestamps();
+            $table->foreignId('user_id');
+            $table->foreignId('property_id');
         });
     }
 
@@ -25,6 +22,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('pamynets');
+        Schema::dropIfExists('user_property');
     }
 };

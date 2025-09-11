@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Properties\Schemas;
 
 use App\Filament\Forms\Components\MapboxSearch;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 final class PropertyForm
@@ -12,13 +12,10 @@ final class PropertyForm
     {
         return $schema
             ->components([
-                Textarea::make('name')
+                TextInput::make('name')
                     ->required()
                     ->columnSpanFull(),
-                Textarea::make('address')
-                    ->required()
-                    ->columnSpanFull(),
-                MapboxSearch::make('address'),
+                MapboxSearch::make('address')->required(),
             ]);
     }
 }

@@ -78,6 +78,7 @@ final class User extends Authenticatable implements FilamentUser, HasMedia
         return true;
     }
 
+
     /**
      * Get the attributes that should be cast.
      *

@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use App\Enums\UserPropertyRelation;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -20,20 +20,20 @@ final class Property extends Model implements HasMedia
         'address' => 'json',
     ];
 
-    public function tenants(): BelongsToMany
-    {
-        return $this->users()->where('relation', UserPropertyRelation::tenant);
-    }
-
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_property')->using(UserProperty::class);
+        return $this->belongsToMany(User::class, 'user_property');
+    }
+
+    public function tenants(): HasMany {
+
+        return $this->hasMany(Lease::class);
+
     }
 
     #[Scope]
     public function myProperty(Builder $builder)
     {
-        return $builder->whereHas('users', fn(Builder $query) => $query->where('user_id', auth()->id())
-            ->where('relation', UserPropertyRelation::owner));
+        return $builder->whereHas('users', fn(Builder $query) => $query->where('user_id', auth()->id()));
     }
 }

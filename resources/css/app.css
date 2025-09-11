@@ -52,7 +52,7 @@
 }
 
 [data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+    @apply !mb-0 !leading-tight;
 }
 
 input:focus[data-flux-control],
@@ -62,7 +62,16 @@ select:focus[data-flux-control] {
 }
 
 .mapbox-dropdown {
- position: absolute;
+    position: absolute;
+}
+
+.my-css .fi-fo-rich-editor-toolbar {
+    position: sticky;
+    top: 64px;
+    background: white;
+    z-index: 2;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 /* \[:where(&)\]:size-4 {
