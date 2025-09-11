@@ -19,6 +19,8 @@ final class PropertiesTable
                 TextColumn::make('name')
                     ->description(fn(Property $record): string => $record->address['placeName'])
                     ->sortable(),
+                TextColumn::make('tenants.tenant_name')->badge()
+                    ->separator(','),
             ])
             ->filters([
 
