@@ -13,9 +13,12 @@ final class PropertyForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('filament.properties.fields.name'))
                     ->required()
                     ->columnSpanFull(),
-                MapboxSearch::make('address')->required(),
+                MapboxSearch::make('address')
+                    ->label(__('filament.properties.fields.address'))
+                    ->required(),
             ]);
     }
 }

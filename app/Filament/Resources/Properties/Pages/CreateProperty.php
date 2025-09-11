@@ -12,6 +12,11 @@ final class CreateProperty extends CreateRecord
 {
     protected static string $resource = PropertyResource::class;
 
+    public function getTitle(): string
+    {
+        return __('filament.properties.pages.create');
+    }
+
     protected function handleRecordCreation(array $data): Model
     {
         try {

@@ -6,8 +6,7 @@ use App\Filament\Resources\Properties\Pages\CreateProperty;
 use App\Filament\Resources\Properties\Pages\EditProperty;
 use App\Filament\Resources\Properties\Pages\ListProperties;
 use App\Filament\Resources\Properties\Pages\ViewProperty;
-use App\Filament\Resources\Properties\RelationManagers\PropertiesRelationManager;
-use App\Filament\Resources\Properties\RelationManagers\TenantsRelationManager;
+use App\Filament\Resources\Properties\RelationManagers\{ExpensesRelationManager, TenantsRelationManager};
 use App\Filament\Resources\Properties\Schemas\PropertyForm;
 use App\Filament\Resources\Properties\Schemas\PropertyInfolist;
 use App\Filament\Resources\Properties\Tables\PropertiesTable;
@@ -25,6 +24,21 @@ final class PropertyResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament.navigation.properties');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament.properties.single');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament.properties.title');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -44,6 +58,8 @@ final class PropertyResource extends Resource
     public static function getRelations(): array
     {
         return [
+            ExpensesRelationManager::class,
+            TenantsRelationManager::class,
         ];
     }
 

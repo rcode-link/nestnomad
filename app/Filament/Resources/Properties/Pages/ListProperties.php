@@ -10,10 +10,16 @@ final class ListProperties extends ListRecords
 {
     protected static string $resource = PropertyResource::class;
 
+    public function getTitle(): string
+    {
+        return __('filament.properties.pages.list');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label(__('filament.properties.pages.create')),
         ];
     }
 }

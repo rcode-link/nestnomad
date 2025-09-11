@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -25,7 +26,8 @@ final class Property extends Model implements HasMedia
         return $this->belongsToMany(User::class, 'user_property');
     }
 
-    public function tenants(): HasMany {
+    public function lease(): HasMany
+    {
 
         return $this->hasMany(Lease::class);
 
@@ -35,5 +37,10 @@ final class Property extends Model implements HasMedia
     public function myProperty(Builder $builder)
     {
         return $builder->whereHas('users', fn(Builder $query) => $query->where('user_id', auth()->id()));
+    }
+
+    public function expenses(): HasManyThrough
+    {
+        return $this->hasManyThrough(Expanse::class, Lease::class);
     }
 }

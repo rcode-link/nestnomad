@@ -10,6 +10,11 @@ class EditLease extends EditRecord
 {
     protected static string $resource = LeaseResource::class;
 
+    public function getTitle(): string
+    {
+        return __('filament.leases.pages.edit');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -10,10 +10,16 @@ class ListLeases extends ListRecords
 {
     protected static string $resource = LeaseResource::class;
 
+    public function getTitle(): string
+    {
+        return __('filament.leases.pages.list');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label(__('filament.leases.pages.create')),
         ];
     }
 }

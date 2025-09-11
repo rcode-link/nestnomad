@@ -17,10 +17,13 @@ final class PropertiesTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('filament.properties.fields.name'))
                     ->description(fn(Property $record): string => $record->address['placeName'])
                     ->sortable(),
-                TextColumn::make('tenants.tenant_name')->badge()
-                    ->separator(','),
+                TextColumn::make('lease.tenant_name')
+                    ->label(__('filament.common.relations.tenants'))
+                    ->badge()
+                    ->separator(', '),
             ])
             ->filters([
 

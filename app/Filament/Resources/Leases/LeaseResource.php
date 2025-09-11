@@ -22,6 +22,21 @@ class LeaseResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'tenant_name';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament.navigation.leases');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament.leases.single');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament.leases.title');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return LeaseForm::configure($schema);

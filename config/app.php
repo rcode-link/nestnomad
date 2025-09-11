@@ -82,6 +82,21 @@ return [
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Available Locales
+    |--------------------------------------------------------------------------
+    |
+    | List all of the available locales for your application.
+    |
+    */
+
+    'available_locales' => [
+        'en' => 'English',
+        'sr_Cyrl' => 'Српски',
+        'bs' => 'Bosanski',
+    ],
+
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     /*

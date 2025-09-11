@@ -28,7 +28,7 @@ final class LeaseForm
                             ->translateLabel()
                             ->schema([
                                 Select::make('property_id')
-                                    ->label(__('property_id'))
+                                    ->label(__('filament.leases.fields.property'))
                                     ->searchable()
                                     ->getSearchResultsUsing(fn(string $search): array => Property::query()
                                         ->where('name', 'like', "%{$search}%")
@@ -42,8 +42,10 @@ final class LeaseForm
                                         'md' => 2,
                                     ])->schema([
                                         DatePicker::make('start_of_lease')
+                                            ->label(__('filament.leases.fields.start_date'))
                                             ->required(),
-                                        DatePicker::make('end_of_lease'),
+                                        DatePicker::make('end_of_lease')
+                                            ->label(__('filament.leases.fields.end_date')),
                                     ]),
                                 Flex::make([
                                     Select::make('user_id')
@@ -59,7 +61,10 @@ final class LeaseForm
                                         ->afterStateUpdated(fn($get, $set) => $set('tenant_name', User::find($get('user_id'))?->name))
                                         ->getOptionLabelUsing(fn($value): ?string => User::find($value)?->name),
                                     TextEntry::make('or')->hiddenLabel()->state('or')->grow(false),
-                                    TextInput::make('tenant_name')->live()->readOnly(fn($get) => $get('user_id')),
+                                    TextInput::make('tenant_name')
+                                        ->label(__('filament.leases.fields.tenant'))
+                                        ->live()
+                                        ->readOnly(fn($get) => $get('user_id')),
                                 ])->verticallyAlignCenter(),
                             ]),
                         Tab::make('contract')

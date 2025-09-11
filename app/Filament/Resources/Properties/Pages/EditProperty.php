@@ -11,6 +11,11 @@ final class EditProperty extends EditRecord
 {
     protected static string $resource = PropertyResource::class;
 
+    public function getTitle(): string
+    {
+        return __('filament.properties.pages.edit');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
