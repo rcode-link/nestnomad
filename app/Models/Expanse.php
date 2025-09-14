@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -20,6 +21,7 @@ final class Expanse extends Model implements HasMedia
         'updated_at',
         'is_paid',
         'due_date',
+        'description',
     ];
 
     public function lease()
@@ -29,5 +31,11 @@ final class Expanse extends Model implements HasMedia
 
 
     public function generatePdf(): void {}
+
+
+    public function payment(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 
 }

@@ -14,6 +14,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
@@ -45,6 +46,8 @@ final class ExpensesRelationManager extends RelationManager
 
     public function infolist(Schema $schema): Schema
     {
+
+
         return $schema
             ->components([
                 TextEntry::make('name'),
@@ -57,22 +60,20 @@ final class ExpensesRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
-                    ->label(__('filament.charges.fields.description'))
-                    ->searchable(),
-                TextColumn::make('category')
                     ->label(__('filament.charges.fields.category'))
-                    ->badge()
+                    ->description(fn(Expanse $record) => $record->description)
                     ->formatStateUsing(fn(string $state): string => ChargeCategory::from($state)->getLabel())
                     ->color(fn(string $state): string => ChargeCategory::from($state)->getColor())
                     ->icon(fn(string $state): string => ChargeCategory::from($state)->getIcon()),
-                TextColumn::make('lease.tenant_name')
-                    ->label(__('filament.charges.fields.tenant'))
-                    ->sortable()
-                    ->searchable(),
+
                 TextColumn::make('amount')
                     ->label(__('filament.charges.fields.amount'))
                     ->money('EUR', divideBy: 100)
                     ->sortable(),
+                TextColumn::make('payment.amount')
+                    ->label(__('filament.charges.fields.amount'))
+                    ->money('EUR', divideBy: 100, decimalPlaces: 2)
+                    ->badge(),
                 TextColumn::make('due_date')
                     ->label(__('filament.charges.fields.due_date'))
                     ->sortable()
@@ -87,18 +88,20 @@ final class ExpensesRelationManager extends RelationManager
 
             ->filters([
                 Filter::make('active_bills')->default(true)
-                    ->query(fn(Builder $query): Builder => $query->where('is_paid', false))
-
-                ,
+                    ->query(fn(Builder $query): Builder => $query->where('is_paid', false)),
             ])
             ->defaultSort('due_date')
+            ->defaultGroup('lease.tenant_name')
             ->headerActions([
-                Action::make('create')->form([
+                Action::make('create')->schema([
                     Select::make('name')
                         ->label(__('filament.charges.fields.category'))
                         ->options(ChargeCategory::getOptions())
                         ->default(ChargeCategory::RENT->value)
+                        ->live()
                         ->required(),
+                    TextInput::make('description')
+                        ->label(__('filament.charges.fields.description')),
 
                     TextInput::make('amount')
                         ->label(__('filament.charges.fields.amount'))
@@ -106,7 +109,6 @@ final class ExpensesRelationManager extends RelationManager
                         ->step(0.01)
                         ->inputMode('decimal')
                         ->required(),
-
                     DatePicker::make('due_date')
                         ->label(__('filament.charges.fields.due_date'))
                         ->required(),
@@ -159,6 +161,7 @@ final class ExpensesRelationManager extends RelationManager
                             'amount' => $per_lease_amount,
                             'is_private' => ! $data['share_with_tenants'] ?? false,
                             'due_date' => $data['due_date'],
+                            'description' => $data['description'],
                         ]);
 
                         if ($data['generate_pdf']) {
@@ -175,8 +178,28 @@ final class ExpensesRelationManager extends RelationManager
             ->recordActions([
                 Action::make('mark_paid')
                     ->requiresConfirmation()
-                    ->visible(fn() => $this->ownerRecord->users()->where('users.id', auth()->id())->count())
-                    ->action(fn(Expanse $record) => $record->update(['is_paid' => true])),
+                    ->fillForm(function (Expanse $record) {
+                        $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
+                        $paidAmount = (int) $sum->payment_sum_amount;
+
+                        return [
+                            'amount' => ($record->amount - $paidAmount) / 100,
+                        ];
+                    })
+                    ->schema([
+                        TextInput::make('amount')
+                            ->numeric()
+                            ->inputMode('decimal')
+                            ->step(0.01)
+                        ,
+                    ])
+                    ->action(function (array $data, Expanse $record): void {
+                        $record->payment()->create(['amount' => (int) ($data['amount'] * 100)]);
+
+                        $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
+                        $paidAmount = (int) $sum->payment_sum_amount;
+                        $record->update(['is_paid' => $record->amount === $paidAmount]);
+                    }),
                 Action::make('view_bill')
                     ->visible(fn(Expanse $record) => $record->getFirstMedia('bill'))
                     ->url(fn(Expanse $record) => $record->getFirstMedia('bill')->getTemporaryUrl(now()->addMinutes(5)))
@@ -184,5 +207,12 @@ final class ExpensesRelationManager extends RelationManager
             ])
             ->toolbarActions([
             ]);
+    }
+
+    private function showExpanseDescription(Get $get): bool
+    {
+
+        return collect([ChargeCategory::UTILITIES->value, ChargeCategory::OTHER->value])->filter(fn($value) => $value === $get('name'))->count() > 0;
+
     }
 }
