@@ -39,8 +39,31 @@ final class Property extends Model implements HasMedia
         return $builder->whereHas('users', fn(Builder $query) => $query->where('user_id', auth()->id()));
     }
 
+    #[Scope]
+    public function iCanAccess(Builder $builder)
+    {
+        return $builder
+            ->whereHas(
+                'users',
+                fn(Builder $query) => $query->where('user_id', auth()->id()),
+            )
+            ->orWhereHas(
+                'lease',
+                fn(Builder $query) => $query->where('user_id', auth()->id()),
+            );
+    }
+
+
+
+
+
     public function expenses(): HasManyThrough
     {
         return $this->hasManyThrough(Expanse::class, Lease::class);
+    }
+
+    public function issues(): HasMany
+    {
+        return $this->hasMany(Issues::class);
     }
 }

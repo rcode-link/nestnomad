@@ -14,7 +14,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
@@ -58,6 +57,7 @@ final class ExpensesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
+            ->modifyQueryUsing(fn($query) => $query->whereHas('lease', fn($builder) => $builder->myLease())->with('media'))
             ->columns([
                 TextColumn::make('name')
                     ->label(__('filament.charges.fields.category'))
@@ -138,46 +138,48 @@ final class ExpensesRelationManager extends RelationManager
                         ->default(true)
                         ->translateLabel(),
                     FileUpload::make('bill')->storeFile(false),
-                ])->action(function ($data): void {
-                    $amount = (int) ($data['amount'] * 100);
-                    $per_lease_amount = $amount;
-                    $leases = $data['leases'] ?? [];
-                    if ($data['split_equally_to_leases']) {
-                        $leases = Lease::query()
-                            ->active()
-                            ->where('property_id', $this->ownerRecord->id)->pluck('id');
+                ])
+                    ->visible($this->ownerRecord->query()->myProperty()->count() > 0)
+                    ->action(function ($data): void {
+                        $amount = (int) ($data['amount'] * 100);
+                        $per_lease_amount = $amount;
+                        $leases = $data['leases'] ?? [];
+                        if ($data['split_equally_to_leases']) {
+                            $leases = Lease::query()
+                                ->active()
+                                ->where('property_id', $this->ownerRecord->id)->pluck('id');
 
-                        $per_lease_amount = (int) ($amount / $leases->count());
-                    }
-                    $temporaryPath = null;
-                    if ($data['bill']) {
-                        $temporaryPath = $data['bill']->store('temp', 'public');
-                        $originalName = $data['bill']->getClientOriginalName();
-                    }
-                    foreach ($leases as $lease) {
-                        $model = Expanse::create([
-                            'name' => $data['name'],
-                            'lease_id' => $lease,
-                            'amount' => $per_lease_amount,
-                            'is_private' => ! $data['share_with_tenants'] ?? false,
-                            'due_date' => $data['due_date'],
-                            'description' => $data['description'],
-                        ]);
-
-                        if ($data['generate_pdf']) {
-                            $model->generatePdf();
+                            $per_lease_amount = (int) ($amount / $leases->count());
                         }
-
-
-                        if ($temporaryPath) {
-                            $model->addMediaFromDisk($temporaryPath, 'public')->usingFileName($originalName)->toMediaCollection('bill');
+                        $temporaryPath = null;
+                        if ($data['bill']) {
+                            $temporaryPath = $data['bill']->store('temp', 'public');
+                            $originalName = $data['bill']->getClientOriginalName();
                         }
-                    }
-                }),
+                        foreach ($leases as $lease) {
+                            $model = Expanse::create([
+                                'name' => $data['name'],
+                                'lease_id' => $lease,
+                                'amount' => $per_lease_amount,
+                                'is_private' => ! $data['share_with_tenants'] ?? false,
+                                'due_date' => $data['due_date'],
+                                'description' => $data['description'],
+                            ]);
+
+                            if ($data['generate_pdf']) {
+                                $model->generatePdf();
+                            }
+
+                            if ($temporaryPath) {
+                                $model->addMediaFromDisk($temporaryPath, 'public')->usingFileName($originalName)->toMediaCollection('bill', 's3');
+                            }
+                        }
+                    }),
             ])
             ->recordActions([
                 Action::make('mark_paid')
                     ->requiresConfirmation()
+                    ->visible($this->ownerRecord->query()->myProperty()->count() > 0)
                     ->fillForm(function (Expanse $record) {
                         $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
                         $paidAmount = (int) $sum->payment_sum_amount;
@@ -207,12 +209,5 @@ final class ExpensesRelationManager extends RelationManager
             ])
             ->toolbarActions([
             ]);
-    }
-
-    private function showExpanseDescription(Get $get): bool
-    {
-
-        return collect([ChargeCategory::UTILITIES->value, ChargeCategory::OTHER->value])->filter(fn($value) => $value === $get('name'))->count() > 0;
-
     }
 }

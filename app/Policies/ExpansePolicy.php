@@ -2,25 +2,25 @@
 
 namespace App\Policies;
 
-use App\Models\Expenses;
+use App\Models\Expanse;
 use App\Models\User;
 
-final class ExpensesPolicy
+final class ExpansePolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return null !== auth()->user();
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Expenses $expenses): bool
+    public function view(User $user, Expanse $expanse): bool
     {
-        return false;
+        return $expanse->whereHas('lease', fn($builder) => $builder->myLease())->count() > 0;
     }
 
     /**
@@ -34,7 +34,7 @@ final class ExpensesPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Expenses $expenses): bool
+    public function update(User $user, Expanse $expanse): bool
     {
         return false;
     }
@@ -42,7 +42,7 @@ final class ExpensesPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Expenses $expenses): bool
+    public function delete(User $user, Expanse $expanse): bool
     {
         return false;
     }
@@ -50,7 +50,7 @@ final class ExpensesPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Expenses $expenses): bool
+    public function restore(User $user, Expanse $expanse): bool
     {
         return false;
     }
@@ -58,7 +58,7 @@ final class ExpensesPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Expenses $expenses): bool
+    public function forceDelete(User $user, Expanse $expanse): bool
     {
         return false;
     }

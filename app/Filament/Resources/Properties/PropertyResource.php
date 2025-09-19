@@ -6,7 +6,7 @@ use App\Filament\Resources\Properties\Pages\CreateProperty;
 use App\Filament\Resources\Properties\Pages\EditProperty;
 use App\Filament\Resources\Properties\Pages\ListProperties;
 use App\Filament\Resources\Properties\Pages\ViewProperty;
-use App\Filament\Resources\Properties\RelationManagers\{ExpensesRelationManager, TenantsRelationManager};
+use App\Filament\Resources\Properties\RelationManagers\{ExpensesRelationManager, IssuesRelationManager, TenantsRelationManager};
 use App\Filament\Resources\Properties\Schemas\PropertyForm;
 use App\Filament\Resources\Properties\Schemas\PropertyInfolist;
 use App\Filament\Resources\Properties\Tables\PropertiesTable;
@@ -21,7 +21,7 @@ final class PropertyResource extends Resource
 {
     protected static ?string $model = Property::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHomeModern;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -52,7 +52,9 @@ final class PropertyResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return PropertiesTable::configure($table);
+        return PropertiesTable::configure(
+            $table,
+        );
     }
 
     public static function getRelations(): array
@@ -60,6 +62,7 @@ final class PropertyResource extends Resource
         return [
             ExpensesRelationManager::class,
             TenantsRelationManager::class,
+            IssuesRelationManager::class,
         ];
     }
 

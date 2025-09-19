@@ -13,6 +13,7 @@ final class LeasesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn($query) => $query->myLease())
             ->columns([
                 TextColumn::make('property.name')
                     ->label(__('filament.leases.fields.property'))
@@ -20,7 +21,7 @@ final class LeasesTable
                 TextColumn::make('tenant_name')
                     ->label(__('filament.leases.fields.tenant'))
                     ->searchable(),
-               TextColumn::make('start_of_lease')
+                TextColumn::make('start_of_lease')
                     ->label(__('filament.leases.fields.start_date'))
                     ->date()
                     ->sortable(),
@@ -28,7 +29,7 @@ final class LeasesTable
                     ->label(__('filament.leases.fields.end_date'))
                     ->date()
                     ->sortable(),
-          ])
+            ])
             ->filters([
 
             ])

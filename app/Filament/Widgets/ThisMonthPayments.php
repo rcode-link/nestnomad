@@ -15,7 +15,8 @@ final class ThisMonthPayments extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn(): Builder => Expanse::query()->whereHas('lease.property')
+            ->query(fn(): Builder => Expanse::query()
+                ->whereHas('lease', fn($builder) => $builder->myLease()->with('media'))
                 ->where('is_paid', false)
                 ->orderBy('updated_at'))
             ->heading(__("Upcoming charges"))

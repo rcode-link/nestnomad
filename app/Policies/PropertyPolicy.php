@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Property;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 final class PropertyPolicy
 {
@@ -20,7 +21,10 @@ final class PropertyPolicy
      */
     public function view(User $user, Property $property): bool
     {
-        return true;
+        return $property
+            ->query()
+            ->myProperty()
+            ->orWhereHas('lease', fn($builder) => $builder->myLease())->count() > 0;
     }
 
     /**
@@ -36,7 +40,8 @@ final class PropertyPolicy
      */
     public function update(User $user, Property $property): bool
     {
-        return true;
+
+        return $property->whereHas('users', fn(Builder $builder) => $builder->where('user_id', $user->id))->count() > 0;
     }
 
     /**
@@ -44,7 +49,7 @@ final class PropertyPolicy
      */
     public function delete(User $user, Property $property): bool
     {
-        return true;
+        return $property->whereHas('users', fn(Builder $builder) => $builder->where('user_id', $user->id))->count() > 0;
     }
 
     /**
@@ -53,7 +58,7 @@ final class PropertyPolicy
     public function restore(User $user, Property $property): bool
     {
 
-        return true;
+        return $property->whereHas('users', fn(Builder $builder) => $builder->where('user_id', $user->id))->count() > 0;
     }
 
     /**
@@ -61,6 +66,6 @@ final class PropertyPolicy
      */
     public function forceDelete(User $user, Property $property): bool
     {
-        return true;
+        return $property->whereHas('users', fn(Builder $builder) => $builder->where('user_id', $user->id))->count() > 0;
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Filament\Forms\Components;
 
 use Filament\Forms\Components\Field;
-use Livewire\Attributes\Computed;
 
 final class MapboxSearch extends Field
 {

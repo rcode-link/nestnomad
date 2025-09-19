@@ -10,12 +10,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use LakM\Commenter\Concerns\Commenter;
+use LakM\Commenter\Contracts\CommenterContract;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-final class User extends Authenticatable implements FilamentUser, HasMedia
+final class User extends Authenticatable implements FilamentUser, HasMedia, CommenterContract
 {
+    use Commenter;
     /** @use HasFactory<UserFactory> */
     use HasFactory;
     use InteractsWithMedia;
@@ -41,6 +44,7 @@ final class User extends Authenticatable implements FilamentUser, HasMedia
         'password',
         'remember_token',
     ];
+
 
     /**
      * Get the user's initials
@@ -72,6 +76,8 @@ final class User extends Authenticatable implements FilamentUser, HasMedia
     {
         return $this->avatar_url ? getFirstMediaUrl('avatar') : null ;
     }
+
+
 
     public function canAccessPanel(Panel $panel): bool
     {

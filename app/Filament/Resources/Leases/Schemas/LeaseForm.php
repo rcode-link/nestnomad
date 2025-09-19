@@ -53,7 +53,7 @@ final class LeaseForm
                                         ->grow(true)
                                         ->searchable()
                                         ->getSearchResultsUsing(fn(string $search): array => User::query()
-                                            ->where('name', 'like', "%{$search}%")
+                                            ->where('email', $search)
                                             ->limit(50)
                                             ->pluck('name', 'id')
                                             ->all())
@@ -72,6 +72,21 @@ final class LeaseForm
                             ->schema([
                                 RichEditor::make('contract')
                                     ->json()
+                                    ->floatingToolbars([
+                                        'paragraph' => [
+                                            'bold', 'italic', 'underline', 'strike', 'subscript', 'superscript',
+                                        ],
+                                        'heading' => [
+                                            'h1', 'h2', 'h3',
+                                        ],
+                                        'table' => [
+                                            'tableAddColumnBefore', 'tableAddColumnAfter', 'tableDeleteColumn',
+                                            'tableAddRowBefore', 'tableAddRowAfter', 'tableDeleteRow',
+                                            'tableMergeCells', 'tableSplitCell',
+                                            'tableToggleHeaderRow',
+                                            'tableDelete',
+                                        ],
+                                    ])
                                     ->default(null)
                                     ->columnSpanFull(),
 

@@ -2,5 +2,7 @@
     "property_id": "Property",
     "base_information": "Info",
     "User id": "User",
-    "contract": "Contract"
+    "contract": "Contract",
+    "open": "Open",
+    "in_progress": "In Progress"
 }

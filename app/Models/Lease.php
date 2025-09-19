@@ -31,6 +31,12 @@ final class Lease extends Model
     public function property(): BelongsTo
     {
 
-        return $this->belongsTo(Property::class)->myProperty();
+        return $this->belongsTo(Property::class);
+    }
+
+    #[Scope]
+    public function myLease(Builder $query): void
+    {
+        $query->whereHas('property', fn($builder) => $builder->myProperty())->orWhere('user_id', auth()->id());
     }
 }

@@ -42,7 +42,7 @@ final class MapboxSearch extends Component
         $token = config('app.mapbox');
         $search = $this->search;
         $sessionToken = $this->sessionToken;
-        $response = Http::get("https://api.mapbox.com/search/searchbox/v1/suggest?q={$search}&types=address&access_token={$token}&session_token={$sessionToken}");
+        $response = Http::get("https://api.mapbox.com/search/searchbox/v1/suggest?q={$search}&access_token={$token}&session_token={$sessionToken}");
         $data = $response->json();
         return $data['suggestions'];
 
