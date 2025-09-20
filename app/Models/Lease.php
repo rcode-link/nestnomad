@@ -35,8 +35,14 @@ final class Lease extends Model
     }
 
     #[Scope]
+    public function propertyOwner(Builder $query): void
+    {
+        $query->whereHas('property', fn($builder) => $builder->myProperty());
+    }
+
+    #[Scope]
     public function myLease(Builder $query): void
     {
-        $query->whereHas('property', fn($builder) => $builder->myProperty())->orWhere('user_id', auth()->id());
+        $query->propertyOwner()->orWhere('user_id', auth()->id());
     }
 }

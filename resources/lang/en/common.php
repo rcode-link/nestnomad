@@ -5,4 +5,5 @@ return [
     "in_progress" => "In Progress",
     "postponed" => "Postponed",
     "done" => "Done",
+    "Issues" => "Issues",
 ];

@@ -3,14 +3,11 @@
 namespace App\Filament\Resources\Properties\RelationManagers;
 
 use App\Enums\ChargeCategory;
+use App\Filament\Resources\Expanses\Actions\CreateAction;
+use App\Filament\Resources\Expanses\Actions\ViewAction;
 use App\Models\Expanse;
-use App\Models\Lease;
 use Carbon\Carbon;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -18,7 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -57,7 +54,7 @@ final class ExpensesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
-            ->modifyQueryUsing(fn($query) => $query->whereHas('lease', fn($builder) => $builder->myLease())->with('media'))
+            ->modifyQueryUsing(fn($query) => $query->whereHas('lease', fn($builder) => $builder->myLease()))
             ->columns([
                 TextColumn::make('name')
                     ->label(__('filament.charges.fields.category'))
@@ -87,97 +84,32 @@ final class ExpensesRelationManager extends RelationManager
             ])
 
             ->filters([
-                Filter::make('active_bills')->default(true)
-                    ->query(fn(Builder $query): Builder => $query->where('is_paid', false)),
+                SelectFilter::make('active_bills')
+                    ->default('pending_payment')
+                    ->options([
+                        'pending_payment' => 'Pending Payment',
+                        'pending_verification' => 'Pending Verification',
+                    ])
+                    ->query(
+                        function ($data, Builder $query): Builder {
+                            return match ($data['value']) {
+                                'pending_payment' => $query->where('is_paid', false),
+                                'pending_verification' => $query
+                                    ->whereRaw('(amount = (select sum(payments.amount) from payments where expanse_id = expanses.id) and is_paid = false)'),
+                                default => $query,
+                            };
+                        },
+                    ),
             ])
             ->defaultSort('due_date')
             ->defaultGroup('lease.tenant_name')
             ->headerActions([
-                Action::make('create')->schema([
-                    Select::make('name')
-                        ->label(__('filament.charges.fields.category'))
-                        ->options(ChargeCategory::getOptions())
-                        ->default(ChargeCategory::RENT->value)
-                        ->live()
-                        ->required(),
-                    TextInput::make('description')
-                        ->label(__('filament.charges.fields.description')),
-
-                    TextInput::make('amount')
-                        ->label(__('filament.charges.fields.amount'))
-                        ->numeric()
-                        ->step(0.01)
-                        ->inputMode('decimal')
-                        ->required(),
-                    DatePicker::make('due_date')
-                        ->label(__('filament.charges.fields.due_date'))
-                        ->required(),
-                    Checkbox::make('split_equally_to_leases')
-                        ->default(true)
-                        ->live()
-                        ->translateLabel(),
-                    Select::make('leases')
-                        ->multiple()
-                        ->searchable()
-                        ->preload()
-                        ->hidden(fn($get) => $get('split_equally_to_leases'))
-                        ->getOptionLabelsUsing(fn(array $values): array => Lease::query()
-                            ->whereIn('id', $values)
-                            ->pluck('tenant_name', 'id')
-                            ->all())
-                        ->getSearchResultsUsing(fn(string $search): array => Lease::query()
-                            ->active()
-                            ->where('tenant_name', 'like', "%{$search}%")
-                            ->where('property_id', $this->ownerRecord->id)
-                            ->limit(10)
-                            ->pluck('tenant_name', 'id')
-                            ->all()),
-                    Checkbox::make('generate_pdf')
-                        ->translateLabel(),
-                    Checkbox::make('share_with_tenants')
-                        ->default(true)
-                        ->translateLabel(),
-                    FileUpload::make('bill')->storeFile(false),
-                ])
-                    ->visible($this->ownerRecord->query()->myProperty()->count() > 0)
-                    ->action(function ($data): void {
-                        $amount = (int) ($data['amount'] * 100);
-                        $per_lease_amount = $amount;
-                        $leases = $data['leases'] ?? [];
-                        if ($data['split_equally_to_leases']) {
-                            $leases = Lease::query()
-                                ->active()
-                                ->where('property_id', $this->ownerRecord->id)->pluck('id');
-
-                            $per_lease_amount = (int) ($amount / $leases->count());
-                        }
-                        $temporaryPath = null;
-                        if ($data['bill']) {
-                            $temporaryPath = $data['bill']->store('temp', 'public');
-                            $originalName = $data['bill']->getClientOriginalName();
-                        }
-                        foreach ($leases as $lease) {
-                            $model = Expanse::create([
-                                'name' => $data['name'],
-                                'lease_id' => $lease,
-                                'amount' => $per_lease_amount,
-                                'is_private' => ! $data['share_with_tenants'] ?? false,
-                                'due_date' => $data['due_date'],
-                                'description' => $data['description'],
-                            ]);
-
-                            if ($data['generate_pdf']) {
-                                $model->generatePdf();
-                            }
-
-                            if ($temporaryPath) {
-                                $model->addMediaFromDisk($temporaryPath, 'public')->usingFileName($originalName)->toMediaCollection('bill', 's3');
-                            }
-                        }
-                    }),
+                CreateAction::make($this->ownerRecord),
             ])
             ->recordActions([
                 Action::make('mark_paid')
+                    ->color('success')
+                    ->icon(Heroicon::CurrencyEuro)
                     ->requiresConfirmation()
                     ->visible($this->ownerRecord->query()->myProperty()->count() > 0)
                     ->fillForm(function (Expanse $record) {
@@ -192,20 +124,22 @@ final class ExpensesRelationManager extends RelationManager
                         TextInput::make('amount')
                             ->numeric()
                             ->inputMode('decimal')
+                            ->maxValue(function (Expanse $record) {
+                                $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
+                                $paidAmount = (int) $sum->payment_sum_amount;
+                                return ($record->amount - $paidAmount) / 100;
+                            })
                             ->step(0.01)
                         ,
                     ])
                     ->action(function (array $data, Expanse $record): void {
                         $record->payment()->create(['amount' => (int) ($data['amount'] * 100)]);
-
                         $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
                         $paidAmount = (int) $sum->payment_sum_amount;
-                        $record->update(['is_paid' => $record->amount === $paidAmount]);
+                        $is_paid = $record->amount === $paidAmount && $record->query()->whereHas('lease', fn($query) => $query->propertyOwner())->count();
+                        $record->update(['is_paid' => $is_paid]);
                     }),
-                Action::make('view_bill')
-                    ->visible(fn(Expanse $record) => $record->getFirstMedia('bill'))
-                    ->url(fn(Expanse $record) => $record->getFirstMedia('bill')->getTemporaryUrl(now()->addMinutes(5)))
-                    ->openUrlInNewTab(),
+                ViewAction::infolist(),
             ])
             ->toolbarActions([
             ]);

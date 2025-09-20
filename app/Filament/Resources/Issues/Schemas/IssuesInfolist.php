@@ -4,6 +4,8 @@ namespace App\Filament\Resources\Issues\Schemas;
 
 use App\Enums\IssueStatus;
 use App\Filament\Infolists\Components\CommentsEntry;
+use App\Filament\Resources\Properties\PropertyResource;
+use App\Models\Issues;
 use Filament\Actions\Action;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Filament\Forms\Components\Select;
@@ -28,7 +30,7 @@ final class IssuesInfolist
                             ->icon(fn($state) => IssueStatus::from($state)->getIcon())
                             ->color(fn($state) => IssueStatus::from($state)->getColor()),
                         TextEntry::make('user.name'),
-                        TextEntry::make('property.name'),
+                        TextEntry::make('property.name')->url(fn(Issues $record) => PropertyResource::getUrl('view', ['record' => $record->property])),
                         TextEntry::make('property.address.placeName'),
                         TextEntry::make('created_at')
                             ->dateTime(),
@@ -42,8 +44,8 @@ final class IssuesInfolist
                     ]),
                 Section::make()->schema([
                     RichContentRenderer::make($schema->getRecord()->content)
-                            ->fileAttachmentsDisk('s3')
-                            ->fileAttachmentsVisibility('private'),
+                        ->fileAttachmentsDisk('s3')
+                        ->fileAttachmentsVisibility('private'),
                     CommentsEntry::make('title')->hiddenLabel(),
                 ])->columnSpan(2),
             ]);
