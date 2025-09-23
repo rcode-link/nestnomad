@@ -16,6 +16,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Livewire\Attributes\On;
 
 final class PropertyResource extends Resource
 {
@@ -24,6 +25,9 @@ final class PropertyResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHomeModern;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+
+
 
     public static function getNavigationLabel(): string
     {
@@ -75,4 +79,7 @@ final class PropertyResource extends Resource
             'edit' => EditProperty::route('/{record}/edit'),
         ];
     }
+
+    #[On("refreshReceipts")]
+    public function refresh(): void {}
 }

@@ -11,6 +11,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Illuminate\Support\Facades\Storage;
 
 final class CreateAction
 {
@@ -94,7 +95,8 @@ final class CreateAction
                     }
 
                     if ($temporaryPath) {
-                        $model->addMediaFromDisk($temporaryPath, 'public')->usingFileName($originalName)->toMediaCollection('bill', 's3');
+                        $model->addMediaFromDisk($temporaryPath, 'public')->preservingOriginal()->usingFileName($originalName)->toMediaCollection('bill', 's3');
+                        Storage::delete($temporaryPath);
                     }
                 }
             });

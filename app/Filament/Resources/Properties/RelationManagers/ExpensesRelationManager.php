@@ -8,6 +8,7 @@ use App\Filament\Resources\Expanses\Actions\ViewAction;
 use App\Models\Expanse;
 use Carbon\Carbon;
 use Filament\Actions\Action;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -19,6 +20,8 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\On;
 
 final class ExpensesRelationManager extends RelationManager
 {
@@ -28,6 +31,9 @@ final class ExpensesRelationManager extends RelationManager
     {
         return __('filament.common.relations.charges');
     }
+
+    #[On("refreshReceipts")]
+    public function refresh(): void {}
 
     public function form(Schema $schema): Schema
     {
@@ -94,8 +100,7 @@ final class ExpensesRelationManager extends RelationManager
                         function ($data, Builder $query): Builder {
                             return match ($data['value']) {
                                 'pending_payment' => $query->where('is_paid', false),
-                                'pending_verification' => $query
-                                    ->whereRaw('(amount = (select sum(payments.amount) from payments where expanse_id = expanses.id) and is_paid = false)'),
+                                'pending_verification' => $query->pendingVerification(),
                                 default => $query,
                             };
                         },
@@ -129,17 +134,37 @@ final class ExpensesRelationManager extends RelationManager
                                 $paidAmount = (int) $sum->payment_sum_amount;
                                 return ($record->amount - $paidAmount) / 100;
                             })
-                            ->step(0.01)
-                        ,
+                            ->step(0.01),
+                        FileUpload::make('receipt')->storeFile(false),
                     ])
+                    ->visible(function (Expanse $expanse) {
+                        $sum = Expanse::query()->whereId($expanse->id)->withSum('payment', 'amount')->first();
+                        $paidAmount = (int) $sum->payment_sum_amount;
+
+                        if ($expanse->amount === $paidAmount) {
+                            return false;
+                        }
+
+                        return ! $expanse->is_paid;
+
+                    })
                     ->action(function (array $data, Expanse $record): void {
-                        $record->payment()->create(['amount' => (int) ($data['amount'] * 100)]);
+                        $model = $record->payment()->create(['amount' => (int) ($data['amount'] * 100)]);
                         $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
                         $paidAmount = (int) $sum->payment_sum_amount;
                         $is_paid = $record->amount === $paidAmount && $record->query()->whereHas('lease', fn($query) => $query->propertyOwner())->count();
                         $record->update(['is_paid' => $is_paid]);
+                        $temporaryPath = null;
+                        if ($data['receipt']) {
+                            $temporaryPath = $data['receipt']->store('temp', 'public');
+                            $originalName = $data['receipt']->getClientOriginalName();
+                        }
+                        if ($temporaryPath) {
+                            $model->addMediaFromDisk($temporaryPath, 'public')->preservingOriginal()->usingFileName($originalName)->toMediaCollection('receipt', 's3');
+                            Storage::delete($temporaryPath);
+                        }
                     }),
-                ViewAction::infolist(),
+                (new ViewAction())->infolist($this->ownerRecord),
             ])
             ->toolbarActions([
             ]);

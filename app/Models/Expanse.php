@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
@@ -29,6 +31,11 @@ final class Expanse extends Model implements HasMedia
         return $this->belongsTo(Lease::class, 'lease_id');
     }
 
+    #[Scope]
+    public function pendingVerification(Builder $query): void
+    {
+        $query                                    ->whereRaw('(amount = (select sum(payments.amount) from payments where expanse_id = expanses.id) and is_paid = false)');
+    }
 
     public function generatePdf(): void {}
 
