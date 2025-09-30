@@ -19,6 +19,7 @@ final class LeaseForm
 {
     public static function configure(Schema $schema): Schema
     {
+
         return $schema
             ->components([
                 Tabs::make('create_lease')

@@ -34,7 +34,7 @@ final class Expanse extends Model implements HasMedia
     #[Scope]
     public function pendingVerification(Builder $query): void
     {
-        $query                                    ->whereRaw('(amount = (select sum(payments.amount) from payments where expanse_id = expanses.id) and is_paid = false)');
+        $query->whereRaw('(amount = (select sum(payments.amount) from payments where expanse_id = expanses.id) and is_paid = false)');
     }
 
     public function generatePdf(): void {}

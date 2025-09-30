@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Lease;
 use App\Models\Property;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,10 +22,11 @@ final class PropertyPolicy
      */
     public function view(User $user, Property $property): bool
     {
-        return $property
-            ->query()
-            ->myProperty()
-            ->orWhereHas('lease', fn($builder) => $builder->myLease())->count() > 0;
+
+        $isLandLord = $property->users->filter(fn(User $obj) => $obj->id === $user->id)->count() > 0;
+        $isTenant = $property->lease->filter(fn(Lease $obj) => $obj->user_id === $user->id)->count() > 0;
+
+        return ($isLandLord || $isTenant);
     }
 
     /**
@@ -40,8 +42,7 @@ final class PropertyPolicy
      */
     public function update(User $user, Property $property): bool
     {
-
-        return $property->whereHas('users', fn(Builder $builder) => $builder->where('user_id', $user->id))->count() > 0;
+        return $property->users->filter(fn(User $obj) => $obj->id === $user->id)->count() > 0;
     }
 
     /**

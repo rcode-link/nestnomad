@@ -15,7 +15,7 @@ final class PropertiesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn($query) => $query->myProperty()->orWhereHas('lease', fn($builder) => $builder->myLease()))
+            ->modifyQueryUsing(fn($query) => $query->with('users')->iCanAccess())
             ->columns([
                 TextColumn::make('name')
                     ->label(__('filament.properties.fields.name'))

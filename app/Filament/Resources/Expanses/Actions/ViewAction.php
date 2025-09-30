@@ -19,7 +19,7 @@ use Livewire\Component;
 final class ViewAction
 {
     private $action;
-    public function infolist($ownerRecord): Action
+    public function infolist(): Action
     {
         $this->action = Action::make("view")
             ->icon(Heroicon::Eye)

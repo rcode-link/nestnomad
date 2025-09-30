@@ -2,14 +2,20 @@
 
 namespace App\Models;
 
+use Database\Factories\LeaseFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 final class Lease extends Model
 {
+    /** @use HasFactory<LeaseFactory> */
+    use HasFactory;
+
+
     protected $fillable = [
         'property_id',
         'user_id',
@@ -22,6 +28,11 @@ final class Lease extends Model
     protected $casts = [
         'contract' => 'json',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     #[Scope]
     public function active(Builder $builder): void
@@ -50,6 +61,6 @@ final class Lease extends Model
     #[Scope]
     public function myLease(Builder $query): void
     {
-        $query->propertyOwner()->orWhere('user_id', auth()->id());
+        $query->whereHas('property', fn($builder) => $builder->iCanAccess());
     }
 }

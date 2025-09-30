@@ -6,7 +6,9 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -78,12 +80,36 @@ final class User extends Authenticatable implements FilamentUser, HasMedia, Comm
     }
 
 
+    public function myPropertieIds()
+    {
+        if (session()->missing('my_property_id')) {
+            session([
+                'my_property_id' => $this->property()->whereHas(
+                    'users',
+                    fn(Builder $query) => $query->where('user_id', $this->id),
+                )
+                    ->orWhereHas(
+                        'lease',
+                        fn(Builder $query) => $query->where('user_id', $this->id),
+                    )->pluck('property_id')->unique(),
+            ]);
+        }
+
+        return  session('my_property_id', []);
+
+    }
+
 
     public function canAccessPanel(Panel $panel): bool
     {
         return true;
     }
 
+
+    public function property(): BelongsToMany
+    {
+        return $this->belongsToMany(Property::class, 'user_property');
+    }
 
     /**
      * Get the attributes that should be cast.

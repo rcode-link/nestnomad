@@ -21,7 +21,6 @@ final class IssuesInfolist
             ->columns(3)
             ->components([
                 Section::make()
-
                     ->schema([
                         TextEntry::make('status')
                             ->badge()
@@ -30,7 +29,7 @@ final class IssuesInfolist
                             ->icon(fn($state) => IssueStatus::from($state)->getIcon())
                             ->color(fn($state) => IssueStatus::from($state)->getColor()),
                         TextEntry::make('user.name'),
-                        TextEntry::make('property.name')->url(fn(Issues $record) => PropertyResource::getUrl('view', ['record' => $record->property])),
+                        TextEntry::make('property.name')->label(__('filament.properties.single'))->url(fn(Issues $record) => PropertyResource::getUrl('view', ['record' => $record->property])),
                         TextEntry::make('property.address.placeName'),
                         TextEntry::make('created_at')
                             ->dateTime(),

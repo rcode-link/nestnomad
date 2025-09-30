@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use Database\Factories\IssuesFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use LakM\Commenter\Concerns\Commentable;
@@ -12,6 +16,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 final class Issues extends Model implements CommentableContract, HasMedia
 {
     use Commentable;
+    /* @use HasFactory<IssuesFactory>*/
+    use HasFactory;
     use InteractsWithMedia;
 
     protected $fillable = [
@@ -25,6 +31,13 @@ final class Issues extends Model implements CommentableContract, HasMedia
     public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class);
+    }
+
+
+    #[Scope]
+    public function myIssues(Builder $builder)
+    {
+        return $builder->whereHas('property', fn(Builder $query) => $query->iCanAccess());
     }
 
 

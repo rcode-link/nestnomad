@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\Expanses\Tables\ExpansesTable;
 use App\Models\Expanse;
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
@@ -14,37 +15,36 @@ final class ThisMonthPayments extends TableWidget
 {
     public function table(Table $table): Table
     {
-        return $table
+        return ExpansesTable::configure($table)
             ->query(fn(): Builder => Expanse::query()
                 ->whereHas('lease', fn($builder) => $builder->myLease()->with('media'))
-                ->where('is_paid', false)
-                ->orderBy('updated_at'))
-            ->heading(__("Upcoming charges"))
-            ->defaultGroup('lease.tenant_name')
-            ->columns([
-                TextColumn::make('amount')
-                    ->label(__('filament.charges.fields.amount'))
-                    ->money('BAM', divideBy: 100, decimalPlaces: 2),
-                TextColumn::make('due_date')
-                    ->label(__('filament.charges.fields.due_date'))
-                    ->sortable()
-                    ->date()
-                    ->color(fn(string $state, $record) => ! $record->is_paid && Carbon::parse($state) < now() ? 'danger' : 'success'),
-            ])
-            ->filters([
+                ->orderBy('updated_at'));
+        // ->heading(__("Upcoming charges"))
+        // ->defaultGroup('lease.tenant_name')
+        // ->columns([
+        //     TextColumn::make('amount')
+        //         ->label(__('filament.charges.fields.amount'))
+        //         ->money('BAM', divideBy: 100, decimalPlaces: 2),
+        //     TextColumn::make('due_date')
+        //         ->label(__('filament.charges.fields.due_date'))
+        //         ->sortable()
+        //         ->date()
+        //         ->color(fn(string $state, $record) => ! $record->is_paid && Carbon::parse($state) < now() ? 'danger' : 'success'),
+        // ])
+        // ->filters([
 
-            ])
-            ->headerActions([
+        // ])
+        // ->headerActions([
 
-            ])
-            ->recordActions([
+        // ])
+        // ->recordActions([
 
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
+        // ])
+        // ->toolbarActions([
+        //     BulkActionGroup::make([
 
-                ]),
-            ]);
+        //     ]),
+        // ]);
     }
 
 }
