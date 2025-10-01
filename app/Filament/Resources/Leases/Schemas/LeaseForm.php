@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Leases\Schemas;
 use App\Models\Property;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -19,6 +20,10 @@ final class LeaseForm
 {
     public static function configure(Schema $schema): Schema
     {
+
+        if ('create' !== $schema->getOperation()) {
+            $schema->model->load('user');
+        }
 
         return $schema
             ->components([
@@ -48,25 +53,27 @@ final class LeaseForm
                                         DatePicker::make('end_of_lease')
                                             ->label(__('filament.leases.fields.end_date')),
                                     ]),
-                                Flex::make([
-                                    Select::make('user_id')
-                                        ->translateLabel()
-                                        ->grow(true)
-                                        ->searchable()
-                                        ->getSearchResultsUsing(fn(string $search): array => User::query()
-                                            ->where('email', $search)
-                                            ->limit(50)
-                                            ->pluck('name', 'id')
-                                            ->all())
-                                        ->live()
-                                        ->afterStateUpdated(fn($get, $set) => $set('tenant_name', User::find($get('user_id'))?->name))
-                                        ->getOptionLabelUsing(fn($value): ?string => User::find($value)?->name),
-                                    TextEntry::make('or')->hiddenLabel()->state('or')->grow(false),
-                                    TextInput::make('tenant_name')
-                                        ->label(__('filament.leases.fields.tenant'))
-                                        ->live()
-                                        ->readOnly(fn($get) => $get('user_id')),
-                                ])->verticallyAlignCenter(),
+                                Repeater::make('user')
+                                    ->relationship()
+                                    ->schema([Flex::make([
+                                        Select::make('user_id')
+                                            ->translateLabel()
+                                            ->grow(true)
+                                            ->searchable()
+                                            ->getSearchResultsUsing(fn(string $search): array => User::query()
+                                                ->where('email', $search)
+                                                ->limit(50)
+                                                ->pluck('name', 'id')
+                                                ->all())
+                                            ->live()
+                                            ->afterStateUpdated(fn($get, $set) => $set('tenant_name', User::find($get('user_id'))?->name))
+                                            ->getOptionLabelUsing(fn($value): ?string => User::find($value)?->name),
+                                        TextEntry::make('or')->hiddenLabel()->state('or')->grow(false),
+                                        TextInput::make('tenant_name')
+                                            ->label(__('filament.leases.fields.tenant'))
+                                            ->live()
+                                            ->readOnly(fn($get) => $get('user_id')),
+                                    ])->verticallyAlignCenter()]),
                             ]),
                         Tab::make('contract')
                             ->translateLabel()

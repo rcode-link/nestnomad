@@ -109,7 +109,7 @@ return [
         'single' => 'Charge',
         'fields' => [
             'property' => 'Property',
-            'tenant' => 'Tenant',
+            'tenant' => 'Tenant(s)',
             'amount' => 'Amount',
             'category' => 'Category',
             'description' => 'Description',

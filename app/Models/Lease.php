@@ -29,9 +29,9 @@ final class Lease extends Model
         'contract' => 'json',
     ];
 
-    public function user(): BelongsTo
+    public function user(): HasMany
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(UserLease::class);
     }
 
     #[Scope]

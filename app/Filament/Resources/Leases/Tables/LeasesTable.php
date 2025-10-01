@@ -18,7 +18,7 @@ final class LeasesTable
                 TextColumn::make('property.name')
                     ->label(__('filament.leases.fields.property'))
                     ->sortable(),
-                TextColumn::make('tenant_name')
+                TextColumn::make('user.tenant_name')
                     ->label(__('filament.leases.fields.tenant'))
                     ->searchable(),
                 TextColumn::make('start_of_lease')

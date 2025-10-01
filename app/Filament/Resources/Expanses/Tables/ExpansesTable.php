@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Expanses\Tables;
 use App\Enums\ChargeCategory;
 use App\Filament\Resources\Expanses\Actions\ViewAction;
 use App\Models\Expanse;
-use App\Models\Lease;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
@@ -17,7 +16,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 final class ExpansesTable
 {
@@ -25,7 +23,8 @@ final class ExpansesTable
     {
         return $table
             ->recordTitleAttribute('name')
-            ->modifyQueryUsing(fn($query) => $query->whereHas('lease', fn($builder) => $builder->myLease()))
+            ->modifyQueryUsing(fn($query) => $query->withSum('payment', 'amount')
+                ->whereHas('lease', fn($builder) => $builder->myLease()->with('user')))
             ->columns([
                 TextColumn::make('name')
                     ->label(__('filament.charges.fields.category'))
@@ -34,6 +33,7 @@ final class ExpansesTable
                     ->color(fn(string $state): string => ChargeCategory::from($state)->getColor())
                     ->icon(fn(string $state): string => ChargeCategory::from($state)->getIcon()),
 
+                TextColumn::make('lease.user.tenant_name')->label(__('filament.charges.fields.tenant'))->searchable(),
                 TextColumn::make('amount')
                     ->label(__('filament.charges.fields.amount'))
                     ->money('EUR', divideBy: 100)
@@ -54,17 +54,6 @@ final class ExpansesTable
                     ->color(fn(string $state): string => $state ? 'success' : 'warning'),
             ])
             ->filters([
-
-                SelectFilter::make('tenant_name')
-                    ->searchable()
-                    ->options(fn() => Lease::query()->myLease()->pluck('tenant_name', 'tenant_name')->unique())
-                    ->query(function ($data, Builder $query): Builder {
-                        if (0 === Str::length($data['value'])) {
-                            return $query;
-                        }
-                        return $query->whereHas('lease', fn($query) => $query->where('tenant_name', $data['value']));
-                    })
-                ,
                 SelectFilter::make('active_bills')
                     ->default('pending_payment')
                     ->options([
@@ -82,7 +71,6 @@ final class ExpansesTable
                     ),
             ])
             ->defaultSort('due_date')
-            ->defaultGroup('lease.tenant_name')
             ->recordActions([
                 Action::make('mark_paid')
                     ->color('success')
@@ -90,8 +78,7 @@ final class ExpansesTable
                     ->requiresConfirmation()
 //                    ->visible($this->ownerRecord->query()->myProperty()->count() > 0)
                     ->fillForm(function (Expanse $record) {
-                        $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
-                        $paidAmount = (int) $sum->payment_sum_amount;
+                        $paidAmount = (int) $record->payment_sum_amount;
 
                         return [
                             'amount' => ($record->amount - $paidAmount) / 100,
@@ -110,8 +97,7 @@ final class ExpansesTable
                         FileUpload::make('receipt')->storeFile(false),
                     ])
                     ->visible(function (Expanse $expanse) {
-                        $sum = Expanse::query()->whereId($expanse->id)->withSum('payment', 'amount')->first();
-                        $paidAmount = (int) $sum->payment_sum_amount;
+                        $paidAmount = (int) $expanse->payment_sum_amount;
 
                         if ($expanse->amount === $paidAmount) {
                             return false;
@@ -122,8 +108,7 @@ final class ExpansesTable
                     })
                     ->action(function (array $data, Expanse $record): void {
                         $model = $record->payment()->create(['amount' => (int) ($data['amount'] * 100)]);
-                        $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
-                        $paidAmount = (int) $sum->payment_sum_amount;
+                        $paidAmount = (int) $record->payment_sum_amount;
                         $is_paid = $record->amount === $paidAmount && $record->query()->whereHas('lease', fn($query) => $query->propertyOwner())->count();
                         $record->update(['is_paid' => $is_paid]);
                         $temporaryPath = null;
