@@ -1,11 +1,8 @@
 @commenterStyles
 @commenterScripts
 
-<x-dynamic-component
-    :component="$getEntryWrapperView()"
-    :entry="$entry"
->
+<x-dynamic-component :component="$getEntryWrapperView()" :entry="$entry">
     <div {{ $getExtraAttributeBag() }}>
-       <x-commenter::index :model="$getRecord()" />
+        <x-commenter::index :model="$getRecord()" />
     </div>
 </x-dynamic-component>
