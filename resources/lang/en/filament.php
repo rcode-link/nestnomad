@@ -55,9 +55,16 @@ return [
     'leases' => [
         'title' => 'Leases',
         'single' => 'Lease',
+        'tabs' => [
+            'contract' => 'Contract',
+            'base_information' => "Base information",
+        ],
         'fields' => [
             'property' => 'Property',
-            'tenant' => 'Tenant',
+            'tenant' => 'Tenants',
+            'tenant_email' => 'Tenant email',
+            'tenant_name' => 'Tenant Name',
+
             'start_date' => 'Start Date',
             'end_date' => 'End Date',
             'rent_amount' => 'Rent Amount',

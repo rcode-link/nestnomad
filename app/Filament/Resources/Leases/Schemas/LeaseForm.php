@@ -31,10 +31,12 @@ final class LeaseForm
                     ->translateLabel()
                     ->tabs([
                         Tab::make('base_information')
-                            ->translateLabel()
+
+                            ->label(__('filament.leases.tabs.base_information'))
                             ->schema([
                                 Select::make('property_id')
                                     ->label(__('filament.leases.fields.property'))
+                                    ->required()
                                     ->searchable()
                                     ->getSearchResultsUsing(fn(string $search): array => Property::query()
                                         ->where('name', 'like', "%{$search}%")
@@ -54,29 +56,31 @@ final class LeaseForm
                                             ->label(__('filament.leases.fields.end_date')),
                                     ]),
                                 Repeater::make('user')
+                                    ->label(__('filament.leases.fields.tenant'))
                                     ->relationship()
                                     ->schema([Flex::make([
                                         Select::make('user_id')
-                                            ->translateLabel()
+                                            ->label(__('filament.leases.fields.tenant_email'))
                                             ->grow(true)
                                             ->searchable()
                                             ->getSearchResultsUsing(fn(string $search): array => User::query()
                                                 ->where('email', $search)
                                                 ->limit(50)
-                                                ->pluck('name', 'id')
+                                                ->pluck('email', 'id')
                                                 ->all())
                                             ->live()
                                             ->afterStateUpdated(fn($get, $set) => $set('tenant_name', User::find($get('user_id'))?->name))
-                                            ->getOptionLabelUsing(fn($value): ?string => User::find($value)?->name),
-                                        TextEntry::make('or')->hiddenLabel()->state('or')->grow(false),
+                                            ->getOptionLabelUsing(fn($value): ?string => User::find($value)?->email),
+                                        //TextEntry::make('or')->hiddenLabel()->state('or')->grow(false),
                                         TextInput::make('tenant_name')
-                                            ->label(__('filament.leases.fields.tenant'))
+                                            ->label(__('filament.leases.fields.tenant_name'))
                                             ->live()
+                                            ->required()
                                             ->readOnly(fn($get) => $get('user_id')),
                                     ])->verticallyAlignCenter()]),
                             ]),
                         Tab::make('contract')
-                            ->translateLabel()
+                            ->label(__('filament.leases.tabs.contract'))
                             ->schema([
                                 RichEditor::make('contract')
                                     ->json()

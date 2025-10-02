@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Property;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,10 +17,9 @@ final class LeaseFactory extends Factory
      */
     public function definition(): array
     {
-        $user = User::factory()->create();
         return [
-            'user_id' => $user,
             'start_of_lease' => $this->faker->dateTimeBetween('-2 years'),
+            'property_id' => Property::inRandomOrder()->first()->id,
             'contract' => [
                 "type" => "doc",
                 "content" => [
@@ -30,7 +29,6 @@ final class LeaseFactory extends Factory
                     ],
                 ],
             ],
-            'tenant_name' => $user->name,
         ];
     }
 }

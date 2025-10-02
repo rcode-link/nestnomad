@@ -21,7 +21,7 @@ final class PropertiesTable
                     ->label(__('filament.properties.fields.name'))
                     ->description(fn(Property $record): string => $record->address['placeName'])
                     ->sortable(),
-                TextColumn::make('lease.tenant_name')
+                TextColumn::make('lease.user.tenant_name')
                     ->label(__('filament.common.relations.tenants'))
                     ->badge()
                     ->separator(', '),

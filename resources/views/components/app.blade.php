@@ -3,7 +3,7 @@
 <head>
         @include('partials.head')
 </head>
-<body>
+<body class="font-sans">
         {{ $slot }}
 </body>
 </html>
