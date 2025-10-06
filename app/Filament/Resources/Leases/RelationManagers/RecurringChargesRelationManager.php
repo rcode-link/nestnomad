@@ -26,6 +26,13 @@ final class RecurringChargesRelationManager extends RelationManager
     {
         return $schema
             ->components([
+                Select::make('interval')
+                    ->options(['week' => 'Week', 'month' => 'Month'])
+                    ->live()
+                    ->required(),
+                Select::make('interval_at')->options(range(1, 28))->visible(fn(Get $get) => 'month' === $get('interval'))->live(),
+                Select::make('interval_at')->options(Carbon::getDays())->visible(fn(Get $get) => 'week' === $get('interval'))->live(),
+
                 TimePicker::make('execute_at')
                     ->seconds(false)
                     ->native(false)
@@ -36,20 +43,21 @@ final class RecurringChargesRelationManager extends RelationManager
                     ->options(ChargeCategory::getOptions())
                     ->default(ChargeCategory::RENT->value)
                     ->live()
+                    ->columnSpanFull()
                     ->required(),
-
                 TextInput::make('description')
+                    ->columnSpanFull()
                     ->default(null),
                 TextInput::make('amount')
+                    ->numeric()
+                    ->step(0.01)
+                    ->inputMode('decimal')
+                    ->required()
+                    ->default(0),
+                TextInput::make('due_date_in_days')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Select::make('interval')
-                    ->options(['week' => 'Week', 'month' => 'Month'])
-                    ->live()
-                    ->required(),
-                Select::make('interval_at')->options(range(1, 28))->visible(fn(Get $get) => 'month' === $get('interval'))->live(),
-                Select::make('interval_at')->options(Carbon::getDays())->visible(fn(Get $get) => 'week' === $get('interval'))->live(),
 
             ]);
     }

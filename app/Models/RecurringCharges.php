@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RecurringCharges whereLeaseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RecurringCharges whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|RecurringCharges whereUpdatedAt($value)
+ * @property int $due_date_in_days
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|RecurringCharges whereDueDateInDays($value)
  * @mixin \Eloquent
  */
 final class RecurringCharges extends Model
@@ -40,5 +42,6 @@ final class RecurringCharges extends Model
         'title',
         'description',
         'amount',
+        'due_date_in_days',
     ];
 }

@@ -56,7 +56,16 @@ final class Expanse extends Model implements HasMedia
         'is_paid',
         'due_date',
         'description',
+        'due_date_in_days',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('bill')
+            ->singleFile();
+    }
+
 
     public function lease()
     {

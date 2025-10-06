@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Expanses\Tables;
 
 use App\Enums\ChargeCategory;
+use App\Filament\Resources\Expanses\Actions\EditAction;
 use App\Filament\Resources\Expanses\Actions\ViewAction;
 use App\Models\Expanse;
 use Carbon\Carbon;
@@ -39,11 +40,10 @@ final class ExpansesTable
                     ->formatStateUsing(fn(string $state): string => ChargeCategory::from($state)->getLabel())
                     ->color(fn(string $state): string => ChargeCategory::from($state)->getColor())
                     ->icon(fn(string $state): string => ChargeCategory::from($state)->getIcon()),
-
                 TextColumn::make('lease.user.tenant_name')->label(__('filament.charges.fields.tenant'))->searchable(),
                 TextColumn::make('amount')
                     ->label(__('filament.charges.fields.amount'))
-                    ->money('EUR', divideBy: 100)
+                    ->money('EUR', divideBy: 100, decimalPlaces: 2)
                     ->sortable(),
                 TextColumn::make('payment.amount')
                     ->label(__('filament.charges.fields.amount'))
@@ -66,12 +66,14 @@ final class ExpansesTable
                     ->options([
                         'pending_payment' => 'Pending Payment',
                         'pending_verification' => 'Pending Verification',
+                        'needs_attention' => 'Needs attention',
                     ])
                     ->query(
                         function ($data, Builder $query): Builder {
                             return match ($data['value']) {
                                 'pending_payment' => $query->where('is_paid', false),
                                 'pending_verification' => $query->pendingVerification(),
+                                'needs_attention' => $query->where('amount', 0),
                                 default => $query,
                             };
                         },
@@ -79,6 +81,7 @@ final class ExpansesTable
             ])
             ->defaultSort('due_date')
             ->recordActions([
+                EditAction::make(),
                 Action::make('mark_paid')
                     ->color('success')
                     ->icon(Heroicon::CurrencyEuro)

@@ -20,6 +20,7 @@ return new class () extends Migration {
             $table->string('title');
             $table->string('description')->nullable();
             $table->integer('amount')->default(0);
+            $table->integer('due_date_in_days');
             $table->timestamps();
         });
     }
