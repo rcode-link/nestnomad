@@ -1,6 +1,5 @@
 <div
     x-data="{
-        open: false,
         atTop: true,
         handleThemeChange(e) {
             if (document.documentElement.classList.contains('dark')) {
@@ -13,6 +12,7 @@
             localStorage.setItem('theme', 'dark')
         },
     }"
+    x-init="atTop = (window.pageYOffset < 50) ? true:false"
     class="sticky top-0 left-0 z-40 flex items-center w-full ud-header"
     :class="{'bg-white/40 dark:bg-dark/40 shadow bg-blur': !atTop, 'text-white': atTop}"
     @scroll.window="atTop = (window.pageYOffset < 50) ? true:false"
@@ -30,7 +30,9 @@
             </div>
 
             <div class="flex items-center justify-between w-full px-4">
-                <div>
+                <div x-data="{
+                    open: false,
+                }">
                     <button
                         id="navbarToggler"
                         @click="open = !open"
@@ -94,7 +96,30 @@
                     </nav>
                 </div>
                 <div class="flex items-center justify-end pr-16 lg:pr-0">
+                        <div x-data="{
+                            openLang: false,
+                        }"
+                        class="relative flex items-center mr-4"
+                        >
+                            <button @click="openLang = !openLang"                         >
+                            {{config('app.available_locales')[$lanuage]}}
+                           </button>
+                                <ul
+                                    class="absolute top-full max-w-[250px] text-dark dark:text-white rounded-lg bg-white dark:bg-dark-2 py-5 shadow-lg dark:bg-dark-2"
+                                    :class="{'hidden': !openLang, 'lg:flex flex-col 2xl:ml-20 block': openLang}"
+                                >
+                                @foreach(config('app.available_locales') as $localeKey => $name)
+                                    <li class="relative group px-4 hover:text-primary">
+                                        <a href="{{route('lang', ['lang' => $localeKey])}}" >
+                                        {{$name}}
+                                        </a>
+                                    </li>
+                                @endforeach
+                               </ul>
+                        </div>
                     <div class="hidden sm:flex">
+
+
                         <div class="themeSelector flex items-center">
                             <x-filament::icon
                                 icon="heroicon-o-sun"

@@ -31,4 +31,28 @@ return [
             'description' => 'Upravljajte i pratite stanje nekretnine.',
         ],
     ],
+    'pricing' => [
+        'title' => 'Cijenovnik',
+        'heading' => 'Naši Paketi Usluga',
+        'description' => 'Odaberite paket koji najbolje odgovara Vašim potrebama i budžetu.',
+    ],
+    'contact' => [
+        'title' => 'Kontaktirajte Nas',
+        'heading' => 'Stupite u Kontakt',
+        'form' => [
+            'title' => 'Pošaljite Nam Poruku',
+            'full_name' => 'Puno Ime',
+            'email' => 'Email Adresa',
+            'phone' => 'Broj Telefona',
+            'message' => 'Vaša Poruka',
+            'submit' => 'Pošaljite',
+            'placeholder' => [
+                'full_name' => 'Unesite svoje puno ime',
+                'email' => 'Unesite svoju email adresu',
+                'phone' => 'Unesite svoj broj telefona',
+                'message' => 'Unesite svoju poruku ovdje...',
+            ],
+        ],
+
+    ],
 ];

@@ -33,5 +33,27 @@ return [
         ],
 
     ],
-
+    'pricing' => [
+        'title' => 'Pricing',
+        'heading' => 'Our Pricing Plans',
+        'description' => 'Choose the plan that best fits your needs and budget.',
+    ],
+    'contact' => [
+        'title' => 'Contact Us',
+        'heading' => 'Get in Touch',
+        'form' => [
+            'title' => 'Send Us a Message',
+            'full_name' => 'Full Name',
+            'email' => 'Email Address',
+            'phone' => 'Phone Number',
+            'message' => 'Your Message',
+            'submit' => 'Submit',
+            'placeholder' => [
+                'full_name' => 'Enter your full name',
+                'email' => 'Enter your email address',
+                'phone' => 'Enter your phone number',
+                'message' => 'Type your message here...',
+            ],
+        ],
+    ],
 ];

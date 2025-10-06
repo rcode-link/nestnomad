@@ -3,10 +3,28 @@
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => view('welcome'))->name('home');
-Route::get('/landing', fn() => view('landing.index'))->name('landing');
+//Route::get('/', fn() => view('welcome'))->name('home');
+Route::get('/', function () {
+
+    $lang = session("lang", 'en');
+    App::setLocale($lang);
+    view()->share([
+        'lanuage' => $lang,
+    ]);
+    return view('landing.index');
+})->name('landing');
+
+Route::get('/lang/{lang}', function ($lang) {
+    $languages = config('app.available_locales');
+    session(['lang' => isset($languages[$lang]) ? $lang : config('app.locale')]);
+
+
+    return redirect()->back();
+
+})->name('lang');
 
 # Route::view('dashboard', 'dashboard')
 #     ->middleware(['auth', 'verified'])
