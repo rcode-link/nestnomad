@@ -9,7 +9,6 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Tabs;
@@ -71,13 +70,15 @@ final class LeaseForm
                                             ->live()
                                             ->afterStateUpdated(fn($get, $set) => $set('tenant_name', User::find($get('user_id'))?->name))
                                             ->getOptionLabelUsing(fn($value): ?string => User::find($value)?->email),
-                                        //TextEntry::make('or')->hiddenLabel()->state('or')->grow(false),
                                         TextInput::make('tenant_name')
                                             ->label(__('filament.leases.fields.tenant_name'))
                                             ->live()
                                             ->required()
                                             ->readOnly(fn($get) => $get('user_id')),
-                                    ])->verticallyAlignCenter()]),
+                                    ])
+                                        ->from('md')
+                                        ->verticallyAlignCenter(),
+                                    ]),
                             ]),
                         Tab::make('contract')
                             ->label(__('filament.leases.tabs.contract'))
