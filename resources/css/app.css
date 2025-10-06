@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 
+@custom-variant dark (&:where(.dark, .dark *));
 @theme {
     --color-primary: #3758f9;
     --color-secondary: #13c296;
@@ -20,6 +21,9 @@
     --color-gray-7: #ced4da;
 }
 
+.bg-blur {
+    backdrop-filter: blur(10px);
+}
 
 .mapbox-dropdown {
     position: absolute;
@@ -33,6 +37,8 @@
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
+
+
 
 /* \[:where(&)\]:size-4 {
     @apply size-4;
