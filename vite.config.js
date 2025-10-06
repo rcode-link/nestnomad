@@ -1,8 +1,8 @@
-import {
-    defineConfig
-} from 'vite';
+import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from "@tailwindcss/vite";
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 export default defineConfig({
     plugins: [
@@ -14,5 +14,13 @@ export default defineConfig({
     ],
     server: {
         cors: true,
+    },
+    build: {
+        minify: isProduction ? 'terser' : false,
+        rollupOptions: {
+            output: {
+                manualChunks: undefined,
+            },
+        },
     },
 });

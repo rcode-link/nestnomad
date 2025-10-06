@@ -26,15 +26,17 @@
                             <div class="mt-16">
                                 <img
                                     class="max-w-full mx-auto rounded-t-xl rounded-tr-xl"
-                                    src="/images/dashboard.png"
+                                                                    src="/images/dashboard.webp"
+                                                                    alt="Dashboard preview"
+                                                                    loading="lazy"
                                 />
                                 <div class="absolute -left-9 bottom-0 z-[-1]">
-                                    <img src="/svg/ellipsis-pattern.svg" />
+                                                                    <img src="/svg/ellipsis-pattern.svg" alt="Ellipsis pattern" loading="lazy" />
                                 </div>
                                 <div
                                     class="absolute -right-6 -top-6 z-[-1] flex"
                                 >
-                                    <img src="/svg/ellipsis-pattern.svg" />
+                                                                    <img src="/svg/ellipsis-pattern.svg" alt="Ellipsis pattern" loading="lazy" />
                                 </div>
                             </div>
                         </div>
