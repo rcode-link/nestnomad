@@ -50,8 +50,10 @@ final class LeaseForm
                                     ])->schema([
                                         DatePicker::make('start_of_lease')
                                             ->label(__('filament.leases.fields.start_date'))
+                                            ->native(false)
                                             ->required(),
                                         DatePicker::make('end_of_lease')
+                                            ->native(false)
                                             ->label(__('filament.leases.fields.end_date')),
                                     ]),
                                 Repeater::make('user')

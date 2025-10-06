@@ -13,6 +13,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
@@ -23,6 +24,12 @@ final class ExpansesTable
     {
         return $table
             ->recordTitleAttribute('name')
+//            ->groups([
+//                Group::make('lease.user.tenant_name'),
+//                Group::make('due_date')
+//                    ->label(__('filament.charges.fields.due_date')),
+//
+//            ])
             ->modifyQueryUsing(fn($query) => $query->withSum('payment', 'amount')
                 ->whereHas('lease', fn($builder) => $builder->myLease()->with('user')))
             ->columns([

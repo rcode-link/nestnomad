@@ -63,4 +63,9 @@ final class Lease extends Model
     {
         $query->whereHas('property', fn($builder) => $builder->iCanAccess());
     }
+
+    public function recurringCharges()
+    {
+        return $this->hasMany(RecurringCharges::class);
+    }
 }

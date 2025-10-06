@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Leases;
 use App\Filament\Resources\Leases\Pages\CreateLease;
 use App\Filament\Resources\Leases\Pages\EditLease;
 use App\Filament\Resources\Leases\Pages\ListLeases;
+use App\Filament\Resources\Leases\RelationManagers\RecurringChargesRelationManager;
 use App\Filament\Resources\Leases\Schemas\LeaseForm;
 use App\Filament\Resources\Leases\Tables\LeasesTable;
 use App\Models\Lease;
@@ -50,7 +51,7 @@ final class LeaseResource extends Resource
     public static function getRelations(): array
     {
         return [
-
+            RecurringChargesRelationManager::class,
         ];
     }
 

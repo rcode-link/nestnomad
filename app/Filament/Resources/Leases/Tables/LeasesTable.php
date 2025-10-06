@@ -13,6 +13,9 @@ final class LeasesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->groups([
+                'property.name','user.tenant_name',
+            ])
             ->modifyQueryUsing(fn($query) => $query->myLease())
             ->columns([
                 TextColumn::make('property.name')
