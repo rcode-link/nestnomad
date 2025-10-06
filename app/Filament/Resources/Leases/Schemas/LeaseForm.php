@@ -86,6 +86,7 @@ final class LeaseForm
                             ->label(__('filament.leases.tabs.contract'))
                             ->schema([
                                 RichEditor::make('contract')
+                                    ->label(__('filament.leases.fields.contract'))
                                     ->json()
                                     ->floatingToolbars([
                                         'paragraph' => [

@@ -24,6 +24,21 @@ final class IssuesResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('filament.navigation.issues');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament.issues.single');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament.issues.title');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return IssuesForm::configure($schema);

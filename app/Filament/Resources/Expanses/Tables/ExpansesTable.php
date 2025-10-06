@@ -64,9 +64,9 @@ final class ExpansesTable
                 SelectFilter::make('active_bills')
                     ->default('pending_payment')
                     ->options([
-                        'pending_payment' => 'Pending Payment',
-                        'pending_verification' => 'Pending Verification',
-                        'needs_attention' => 'Needs attention',
+                        'pending_payment' => __('filament.charges.status.pending_payment'),
+                        'pending_verification' => __('filament.charges.status.pending_verification'),
+                        'needs_attention' => __('filament.charges.status.needs_attention'),
                     ])
                     ->query(
                         function ($data, Builder $query): Builder {
@@ -83,6 +83,7 @@ final class ExpansesTable
             ->recordActions([
                 EditAction::make(),
                 Action::make('mark_paid')
+                    ->label(__('filament.charges.actions.mark_paid'))
                     ->color('success')
                     ->icon(Heroicon::CurrencyEuro)
                     ->requiresConfirmation()

@@ -15,6 +15,7 @@ final class IssuesForm
 
         return [
             TextInput::make('title')
+                ->label(__('filament.issues.fields.title'))
                 ->required(),
             Select::make('property_id')
                 ->visible(null === $propery_id)
@@ -28,6 +29,7 @@ final class IssuesForm
                     ->all())
                 ->getOptionLabelUsing(fn($value): ?string => Property::find($value)?->name),
             RichEditor::make('content')
+                ->label(__('filament.issues.fields.content'))
                 ->json()
                 ->fileAttachmentsDisk('s3')
                 ->fileAttachmentsDirectory('attachments')

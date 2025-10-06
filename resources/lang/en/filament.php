@@ -6,6 +6,7 @@ return [
         'leases' => 'Leases',
         'tenants' => 'Tenants',
         'charges' => 'Tenant Charges',
+        'issues' => 'Issues',
     ],
 
     'properties' => [
@@ -71,6 +72,7 @@ return [
             'deposit' => 'Deposit',
             'status' => 'Status',
             'notes' => 'Notes',
+            'contract' => 'Contract',
         ],
         'actions' => [
             'create' => 'Create Lease',
@@ -130,6 +132,8 @@ return [
             'edit' => 'Edit Charge',
             'view' => 'View Charge',
             'delete' => 'Delete Charge',
+            'mark_paid' => 'Mark Paid',
+            'add_receipt' => 'Add Receipt',
         ],
         'pages' => [
             'create' => 'Create Charge',
@@ -152,6 +156,9 @@ return [
             'paid' => 'Paid',
             'overdue' => 'Overdue',
             'cancelled' => 'Cancelled',
+            'pending_payment' => 'Pending Payment',
+            'pending_verification' => 'Pending Verification',
+            'needs_attention' => 'Needs Attention',
         ],
     ],
 
@@ -179,6 +186,10 @@ return [
             'previous' => 'Previous',
             'confirm' => 'Confirm',
         ],
+        'interval' => [
+            'week' => 'Week',
+            'month' => 'Month',
+        ],
         'relations' => [
             'tenants' => 'Tenants',
             'charges' => 'Charges',
@@ -192,6 +203,60 @@ return [
             'error' => 'An error occurred',
             'no_records' => 'No records found',
             'confirm_delete' => 'Are you sure you want to delete this record?',
+            'language_changed' => 'Language changed successfully',
+        ],
+        'language' => 'Language / Jezik / Језик',
+    ],
+
+    'widgets' => [
+        'expanses_chart' => 'Expenses Chart',
+    ],
+
+    'months' => [
+        'jan' => 'Jan',
+        'feb' => 'Feb',
+        'mar' => 'Mar',
+        'apr' => 'Apr',
+        'may' => 'May',
+        'jun' => 'Jun',
+        'jul' => 'Jul',
+        'aug' => 'Aug',
+        'sep' => 'Sep',
+        'oct' => 'Oct',
+        'nov' => 'Nov',
+        'dec' => 'Dec',
+    ],
+
+    'issues' => [
+        'title' => 'Issues',
+        'single' => 'Issue',
+        'fields' => [
+            'title' => 'Title',
+            'content' => 'Content',
+            'status' => 'Status',
+            'user' => 'Reporter',
+            'property' => 'Property',
+            'created_at' => 'Created At',
+        ],
+        'actions' => [
+            'change_status' => 'Change Status',
+        ],
+        'pages' => [
+            'list' => 'Issues',
+            'create' => 'Create Issue',
+            'edit' => 'Edit Issue',
+            'view' => 'Issue Details',
+        ],
+    ],
+
+    'recurring_charges' => [
+        'fields' => [
+            'interval' => 'Interval',
+            'interval_at' => 'Interval At',
+            'interval_at_month' => 'Day of Month',
+            'interval_at_week' => 'Day of Week',
+            'execute_at' => 'Execute At',
+            'due_date_in_days' => 'Due Date (Days)',
         ],
     ],
 ];

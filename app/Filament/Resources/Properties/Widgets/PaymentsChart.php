@@ -9,7 +9,12 @@ use Flowframe\Trend\{Trend, TrendValue};
 
 final class PaymentsChart extends ChartWidget
 {
-    protected ?string $heading = "Expanses";
+    protected ?string $heading = null;
+
+    public function getHeading(): string
+    {
+        return __('filament.widgets.expanses_chart');
+    }
 
     protected function random_color_part()
     {
@@ -42,7 +47,20 @@ final class PaymentsChart extends ChartWidget
 
         return [
             'datasets' => $expenses,
-            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            'labels' => [
+                __('filament.months.jan'),
+                __('filament.months.feb'),
+                __('filament.months.mar'),
+                __('filament.months.apr'),
+                __('filament.months.may'),
+                __('filament.months.jun'),
+                __('filament.months.jul'),
+                __('filament.months.aug'),
+                __('filament.months.sep'),
+                __('filament.months.oct'),
+                __('filament.months.nov'),
+                __('filament.months.dec'),
+            ],
         ];
     }
 

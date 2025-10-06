@@ -11,6 +11,11 @@ class EditIssues extends EditRecord
 {
     protected static string $resource = IssuesResource::class;
 
+    public function getHeading(): string
+    {
+        return __('filament.issues.pages.edit');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -6,6 +6,7 @@ return [
         'leases' => 'Zakupi',
         'tenants' => 'Stanari',
         'charges' => 'Obračuni',
+        'issues' => 'Problemi',
     ],
 
     'properties' => [
@@ -55,15 +56,22 @@ return [
     'leases' => [
         'title' => 'Zakupi',
         'single' => 'Zakup',
+        'tabs' => [
+            'contract' => 'Ugovor',
+            'base_information' => 'Osnovne informacije',
+        ],
         'fields' => [
             'property' => 'Nekretnina',
-            'tenant' => 'Stanar',
+            'tenant' => 'Stanari',
+            'tenant_email' => 'E-mail stanara',
+            'tenant_name' => 'Ime stanara',
             'start_date' => 'Datum početka',
             'end_date' => 'Datum završetka',
             'rent_amount' => 'Iznos kirije',
             'deposit' => 'Depozit',
             'status' => 'Status',
             'notes' => 'Napomene',
+            'contract' => 'Ugovor',
         ],
         'actions' => [
             'create' => 'Kreiraj zakup',
@@ -109,7 +117,7 @@ return [
         'single' => 'Obračun',
         'fields' => [
             'property' => 'Nekretnina',
-            'tenant' => 'Stanar',
+            'tenant' => 'Stanar(i)',
             'amount' => 'Iznos',
             'category' => 'Kategorija',
             'description' => 'Opis',
@@ -123,6 +131,8 @@ return [
             'edit' => 'Izmijeni obračun',
             'view' => 'Prikaži obračun',
             'delete' => 'Obriši obračun',
+            'mark_paid' => 'Označi kao plaćeno',
+            'add_receipt' => 'Dodaj račun',
         ],
         'pages' => [
             'create' => 'Kreiraj obračun',
@@ -145,6 +155,9 @@ return [
             'paid' => 'Plaćeno',
             'overdue' => 'Dospjelo',
             'cancelled' => 'Otkazano',
+            'pending_payment' => 'Čeka plaćanje',
+            'pending_verification' => 'Čeka provjeru',
+            'needs_attention' => 'Traži pažnju',
         ],
     ],
 
@@ -172,6 +185,10 @@ return [
             'previous' => 'Prethodno',
             'confirm' => 'Potvrdi',
         ],
+        'interval' => [
+            'week' => 'Sedmica',
+            'month' => 'Mjesec',
+        ],
         'messages' => [
             'created' => 'Uspješno kreirano',
             'updated' => 'Uspješno ažurirano',
@@ -179,12 +196,66 @@ return [
             'error' => 'Došlo je do greške',
             'no_records' => 'Nema rezultata',
             'confirm_delete' => 'Da li ste sigurni da želite obrisati ovaj zapis?',
+            'language_changed' => 'Jezik je uspješno promjenjen',
         ],
+        'language' => 'Language / Jezik / Језик',
         'relations' => [
             'tenants' => 'Stanari',
             'charges' => 'Obračuni',
             'leases' => 'Zakupi',
             'properties' => 'Nekretnine',
+        ],
+    ],
+
+    'widgets' => [
+        'expanses_chart' => 'Grafik troškova',
+    ],
+
+    'months' => [
+        'jan' => 'Jan',
+        'feb' => 'Feb',
+        'mar' => 'Mar',
+        'apr' => 'Apr',
+        'may' => 'Maj',
+        'jun' => 'Jun',
+        'jul' => 'Jul',
+        'aug' => 'Aug',
+        'sep' => 'Sep',
+        'oct' => 'Okt',
+        'nov' => 'Nov',
+        'dec' => 'Dec',
+    ],
+
+    'issues' => [
+        'title' => 'Problemi',
+        'single' => 'Problem',
+        'fields' => [
+            'title' => 'Naslov',
+            'content' => 'Sadržaj',
+            'status' => 'Status',
+            'user' => 'Prijavitelj',
+            'property' => 'Nekretnina',
+            'created_at' => 'Kreirano',
+        ],
+        'actions' => [
+            'change_status' => 'Promijeni status',
+        ],
+        'pages' => [
+            'list' => 'Problemi',
+            'create' => 'Kreiraj problem',
+            'edit' => 'Izmijeni problem',
+            'view' => 'Detalji problema',
+        ],
+    ],
+
+    'recurring_charges' => [
+        'fields' => [
+            'interval' => 'Interval',
+            'interval_at' => 'Interval u',
+            'interval_at_month' => 'Dan u mjesecu',
+            'interval_at_week' => 'Dan u sedmici',
+            'execute_at' => 'Izvršiti u',
+            'due_date_in_days' => 'Dospiće (dani)',
         ],
     ],
 ];

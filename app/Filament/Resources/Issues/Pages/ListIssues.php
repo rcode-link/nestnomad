@@ -10,10 +10,16 @@ class ListIssues extends ListRecords
 {
     protected static string $resource = IssuesResource::class;
 
+    public function getHeading(): string
+    {
+        return __('filament.issues.pages.list');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label(__('filament.issues.pages.create')),
         ];
     }
 }

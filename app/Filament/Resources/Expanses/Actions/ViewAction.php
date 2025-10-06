@@ -22,10 +22,12 @@ final class ViewAction
     public function infolist(): Action
     {
         $this->action = Action::make("view")
+            ->label(__('filament.common.actions.view'))
             ->icon(Heroicon::Eye)
             ->modalSubmitAction(false)
             ->extraModalFooterActions([
                 Action::make("MarkPaid")
+                    ->label(__('filament.charges.actions.mark_paid'))
                     ->visible(fn(Expanse $expanse) => $expanse->lease()->propertyOwner()->count() > 0 && ! $expanse->is_paid)
                     ->requiresConfirmation()
                     ->action(function (Expanse $record): void {
@@ -79,7 +81,7 @@ final class ViewAction
                                     ->weight(FontWeight::Bold)
                                     ->money('EUR', divideBy: 100, decimalPlaces: 2),
                                 IconEntry::make('amount')
-                                    ->label('receipt')
+                                    ->label(__('filament.charges.fields.receipt'))
                                     ->alignEnd()
                                     ->hiddenLabel()
                                     ->icon(Heroicon::Link)
@@ -93,6 +95,7 @@ final class ViewAction
                                     ->columnSpanFull()
                                     ->date(),
                                 Action::make("addReceipt")
+                                    ->label(__('filament.charges.actions.add_receipt'))
                                     ->schema([
                                         FileUpload::make('receipt')->storeFile(false)->acceptedFileTypes(['image/*','application/pdf']),
                                     ])

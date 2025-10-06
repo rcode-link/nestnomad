@@ -11,6 +11,11 @@ final class CreateIssues extends CreateRecord
 {
     protected static string $resource = IssuesResource::class;
 
+    public function getHeading(): string
+    {
+        return __('filament.issues.pages.create');
+    }
+
     protected function handleRecordCreation(array $data): Model
     {
 

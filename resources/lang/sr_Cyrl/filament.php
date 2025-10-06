@@ -6,6 +6,7 @@ return [
         'leases' => 'Закупи',
         'tenants' => 'Станари',
         'charges' => 'Обрачуни',
+        'issues' => 'Проблеми',
     ],
 
     'properties' => [
@@ -55,15 +56,22 @@ return [
     'leases' => [
         'title' => 'Закупи',
         'single' => 'Закуп',
+        'tabs' => [
+            'contract' => 'Уговор',
+            'base_information' => 'Основне информације',
+        ],
         'fields' => [
             'property' => 'Непокретност',
-            'tenant' => 'Станар',
+            'tenant' => 'Станари',
+            'tenant_email' => 'Е-пошта станара',
+            'tenant_name' => 'Име станара',
             'start_date' => 'Датум почетка',
             'end_date' => 'Датум завршетка',
             'rent_amount' => 'Износ кирије',
             'deposit' => 'Депозит',
             'status' => 'Статус',
             'notes' => 'Напомене',
+            'contract' => 'Уговор',
         ],
         'actions' => [
             'create' => 'Креирај закуп',
@@ -109,7 +117,7 @@ return [
         'single' => 'Обрачун',
         'fields' => [
             'property' => 'Непокретност',
-            'tenant' => 'Станар',
+            'tenant' => 'Станар(и)',
             'amount' => 'Износ',
             'category' => 'Категорија',
             'description' => 'Опис',
@@ -123,6 +131,8 @@ return [
             'edit' => 'Измени обрачун',
             'view' => 'Прикажи обрачун',
             'delete' => 'Обриши обрачун',
+            'mark_paid' => 'Означи као плаћено',
+            'add_receipt' => 'Додај рачун',
         ],
         'pages' => [
             'create' => 'Креирај обрачун',
@@ -145,6 +155,9 @@ return [
             'paid' => 'Плаћено',
             'overdue' => 'Доспело',
             'cancelled' => 'Отказано',
+            'pending_payment' => 'Чека плаћање',
+            'pending_verification' => 'Чека проверу',
+            'needs_attention' => 'Тражи пажњу',
         ],
     ],
 
@@ -172,6 +185,10 @@ return [
             'previous' => 'Претходно',
             'confirm' => 'Потврди',
         ],
+        'interval' => [
+            'week' => 'Седмица',
+            'month' => 'Месец',
+        ],
         'messages' => [
             'created' => 'Успешно креирано',
             'updated' => 'Успешно ажурирано',
@@ -179,12 +196,66 @@ return [
             'error' => 'Дошло је до грешке',
             'no_records' => 'Нема резултата',
             'confirm_delete' => 'Да ли сте сигурни да желите да обришете овај запис?',
+            'language_changed' => 'Језик је успешно промењен',
         ],
+        'language' => 'Language / Jezik / Језик',
         'relations' => [
             'tenants' => 'Станари',
             'charges' => 'Обрачуни',
             'leases' => 'Закупи',
             'properties' => 'Непокретности',
+        ],
+    ],
+
+    'widgets' => [
+        'expanses_chart' => 'График трошкова',
+    ],
+
+    'months' => [
+        'jan' => 'Јан',
+        'feb' => 'Феб',
+        'mar' => 'Мар',
+        'apr' => 'Апр',
+        'may' => 'Мај',
+        'jun' => 'Јун',
+        'jul' => 'Јул',
+        'aug' => 'Авг',
+        'sep' => 'Сеп',
+        'oct' => 'Окт',
+        'nov' => 'Нов',
+        'dec' => 'Дец',
+    ],
+
+    'issues' => [
+        'title' => 'Проблеми',
+        'single' => 'Проблем',
+        'fields' => [
+            'title' => 'Наслов',
+            'content' => 'Садржај',
+            'status' => 'Статус',
+            'user' => 'Пријавитељ',
+            'property' => 'Непокретност',
+            'created_at' => 'Креирано',
+        ],
+        'actions' => [
+            'change_status' => 'Промени статус',
+        ],
+        'pages' => [
+            'list' => 'Проблеми',
+            'create' => 'Креирај проблем',
+            'edit' => 'Измени проблем',
+            'view' => 'Детаљи проблема',
+        ],
+    ],
+
+    'recurring_charges' => [
+        'fields' => [
+            'interval' => 'Интервал',
+            'interval_at' => 'Интервал у',
+            'interval_at_month' => 'Дан у месецу',
+            'interval_at_week' => 'Дан у недељи',
+            'execute_at' => 'Извршити у',
+            'due_date_in_days' => 'Доспеће (дани)',
         ],
     ],
 ];

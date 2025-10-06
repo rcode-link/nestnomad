@@ -34,6 +34,7 @@ final class IssuesInfolist
                         TextEntry::make('created_at')
                             ->dateTime(),
                         Action::make('change_status')
+                            ->label(__('filament.issues.actions.change_status'))
                             ->visible($schema->getRecord()->whereHas('property', fn($query) => $query->myProperty())->count() > 0)
                             ->schema([
                                 Select::make('status')->options(IssueStatus::getOptions()),

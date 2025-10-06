@@ -17,7 +17,7 @@ final class LanguageSwitcher
             ->icon('heroicon-o-language')
             ->form([
                 Select::make('locale')
-                    ->label('Language / Jezik / Jezik')
+                    ->label(__('filament.common.language'))
                     ->options(config('app.available_locales'))
                     ->default(Session::get('locale', App::getLocale()))
                     ->required(),
@@ -26,7 +26,7 @@ final class LanguageSwitcher
                 Session::put('locale', $data['locale']);
 
                 Notification::make()
-                    ->title('Language changed successfully')
+                    ->title(__('filament.common.messages.language_changed'))
                     ->success()
                     ->send();
 

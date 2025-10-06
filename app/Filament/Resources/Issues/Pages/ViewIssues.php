@@ -10,6 +10,11 @@ class ViewIssues extends ViewRecord
 {
     protected static string $resource = IssuesResource::class;
 
+    public function getHeading(): string
+    {
+        return __('filament.issues.pages.view');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

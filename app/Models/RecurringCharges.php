@@ -44,4 +44,6 @@ final class RecurringCharges extends Model
         'amount',
         'due_date_in_days',
     ];
+
+
 }
