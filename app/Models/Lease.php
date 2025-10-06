@@ -10,6 +10,37 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $property_id
+ * @property string $start_of_lease
+ * @property string|null $end_of_lease
+ * @property array<array-key, mixed>|null $contract
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Expanse> $expanse
+ * @property-read int|null $expanse_count
+ * @property-read \App\Models\Property $property
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\RecurringCharges> $recurringCharges
+ * @property-read int|null $recurring_charges_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserLease> $user
+ * @property-read int|null $user_count
+ * @method static Builder<static>|Lease active()
+ * @method static \Database\Factories\LeaseFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Lease myLease()
+ * @method static Builder<static>|Lease newModelQuery()
+ * @method static Builder<static>|Lease newQuery()
+ * @method static Builder<static>|Lease propertyOwner()
+ * @method static Builder<static>|Lease query()
+ * @method static Builder<static>|Lease whereContract($value)
+ * @method static Builder<static>|Lease whereCreatedAt($value)
+ * @method static Builder<static>|Lease whereEndOfLease($value)
+ * @method static Builder<static>|Lease whereId($value)
+ * @method static Builder<static>|Lease wherePropertyId($value)
+ * @method static Builder<static>|Lease whereStartOfLease($value)
+ * @method static Builder<static>|Lease whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 final class Lease extends Model
 {
     /** @use HasFactory<LeaseFactory> */

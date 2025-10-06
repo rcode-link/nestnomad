@@ -13,6 +13,35 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property array<array-key, mixed> $address
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Expanse> $expenses
+ * @property-read int|null $expenses_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Issues> $issues
+ * @property-read int|null $issues_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Lease> $lease
+ * @property-read int|null $lease_count
+ * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
+ * @property-read int|null $media_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
+ * @method static \Database\Factories\PropertyFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Property iCanAccess()
+ * @method static Builder<static>|Property myProperty()
+ * @method static Builder<static>|Property newModelQuery()
+ * @method static Builder<static>|Property newQuery()
+ * @method static Builder<static>|Property query()
+ * @method static Builder<static>|Property whereAddress($value)
+ * @method static Builder<static>|Property whereCreatedAt($value)
+ * @method static Builder<static>|Property whereId($value)
+ * @method static Builder<static>|Property whereName($value)
+ * @method static Builder<static>|Property whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 final class Property extends Model implements HasMedia
 {
     /** @use HasFactory<PropertyFactory> */
