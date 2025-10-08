@@ -24,6 +24,7 @@ final class CreateProperty extends CreateRecord
             $model = static::getModel()::create($data);
             $model->users()->attach(auth()->id());
             DB::commit();
+            session()->forget('my_property_id');
             return $model;
         } catch (Exception $e) {
             DB::rollBack();
