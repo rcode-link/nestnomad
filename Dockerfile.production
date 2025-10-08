@@ -4,7 +4,7 @@ ENV NVM_DIR=/root/.nvm
 ENV NODE_VERSION=20.11.1
 
 RUN apt update && apt install -y \
-    curl unzip git  libicu-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libssl-dev \
+    curl unzip git cron  libicu-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev libssl-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) pcntl opcache pdo pdo_mysql intl zip gd exif ftp bcmath \
     && pecl install redis \
@@ -40,5 +40,8 @@ RUN npm run build
 COPY unit.json /docker-entrypoint.d/unit.json
 
 EXPOSE 8000
+
+RUN echo '* * * * * php /var/www/html/artisan schedule:run >> /var/log/cron.log 2>&1' | crontab -
+RUN service cron restart
 
 CMD ["unitd", "--no-daemon"]
