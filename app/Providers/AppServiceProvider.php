@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,9 @@ final class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production')) {
             URL::forceScheme('https');
         }
+
+        Livewire::setUpdateRoute(fn($handle) => Route::post('/livewire/update', $handle)
+            ->middleware(['web', 'auth']));
 
 
     }
