@@ -9,6 +9,9 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\Layout\Panel;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -20,25 +23,35 @@ final class IssuesTable
         return $table
             ->modifyQueryUsing(fn($query) => $query->myIssues())
             ->columns([
-                TextColumn::make('title')
-                    ->label(__('filament.issues.fields.title'))
-                    ->sortable(),
-                TextColumn::make('status')
-                    ->label(__('filament.issues.fields.status'))
-                    ->badge()
-                    ->formatStateUsing(fn(string $state): string => IssueStatus::from($state)->getLabel())
-                    ->color(fn(string $state): string => IssueStatus::from($state)->getColor())
-                    ->icon(fn(string $state): string => IssueStatus::from($state)->getIcon()),
-                TextColumn::make('user.name')
-                    ->label(__('filament.issues.fields.user'))
-                    ->sortable(),
-                TextColumn::make('property.name')
-                    ->label(__('filament.issues.fields.property'))
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->label(__('filament.issues.fields.created_at'))
-                    ->date()
-                    ->sortable(),
+                Split::make([
+                    TextColumn::make('status')
+                        ->label(__('filament.issues.fields.status'))
+                        ->badge()
+
+                        ->grow(false)
+                        ->formatStateUsing(fn(string $state): string => IssueStatus::from($state)->getLabel())
+                        ->color(fn(string $state): string => IssueStatus::from($state)->getColor())
+                        ->icon(fn(string $state): string => IssueStatus::from($state)->getIcon()),
+                    TextColumn::make('property.name')
+                        ->label(__('filament.issues.fields.property'))
+                        ->sortable(),
+                    TextColumn::make('user.name')
+                        ->label(__('filament.issues.fields.user'))
+                        ->sortable(),
+                ]),
+                Panel::make([
+                    Stack::make([
+
+                        TextColumn::make('title')
+                            ->label(__('filament.issues.fields.title'))
+                            ->sortable(),
+
+                        TextColumn::make('created_at')
+                            ->label(__('filament.issues.fields.created_at'))
+                            ->date()
+                            ->sortable(),
+                    ]),
+                ])->collapsible(),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([

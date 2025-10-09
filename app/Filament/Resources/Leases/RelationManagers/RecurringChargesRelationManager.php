@@ -16,6 +16,7 @@ use Filament\Forms\Components\TimePicker;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -31,7 +32,7 @@ final class RecurringChargesRelationManager extends RelationManager
                     ->label(__('filament.recurring_charges.fields.interval'))
                     ->options([
                         'week' => __('filament.common.interval.week'),
-                        'month' => __('filament.common.interval.month')
+                        'month' => __('filament.common.interval.month'),
                     ])
                     ->live()
                     ->required(),
@@ -82,38 +83,46 @@ final class RecurringChargesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('title')
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
+            ])
             ->columns([
-                TextColumn::make('interval')
-                    ->label(__('filament.recurring_charges.fields.interval')),
-                TextColumn::make('interval_at')
-                    ->label(__('filament.recurring_charges.fields.interval_at'))
-                    ->state(fn(RecurringCharges $record): string => 'week' === $record['interval'] ? DayOfWeek::from($record['interval_at'])->getLabel() : $record['interval_at'])
-                    ->searchable(),
-                TextColumn::make('execute_at')
-                    ->label(__('filament.recurring_charges.fields.execute_at'))
-                    ->timezone("Europe/Belgrade")
-                    ->time('H:i')
-                    ->sortable(),
-                TextColumn::make('title')
-                    ->label(__('filament.charges.fields.category'))
-                    ->formatStateUsing(fn(string $state): string => ChargeCategory::from($state)->getLabel())
-                    ->color(fn(string $state): string => ChargeCategory::from($state)->getColor())
-                    ->icon(fn(string $state): string => ChargeCategory::from($state)->getIcon()),
-                TextColumn::make('description')
-                    ->label(__('filament.charges.fields.description'))
-                    ->searchable(),
-                TextColumn::make('amount')
-                    ->label(__('filament.charges.fields.amount'))
-                    ->money('EUR', divideBy: 100)
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Stack::make([
+
+                    TextColumn::make('interval')
+                        ->label(__('filament.recurring_charges.fields.interval')),
+                    TextColumn::make('interval_at')
+                        ->label(__('filament.recurring_charges.fields.interval_at'))
+                        ->state(fn(RecurringCharges $record): string => 'week' === $record['interval'] ? DayOfWeek::from($record['interval_at'])->getLabel() : $record['interval_at'])
+                        ->searchable(),
+                    TextColumn::make('execute_at')
+                        ->label(__('filament.recurring_charges.fields.execute_at'))
+                        ->timezone("Europe/Belgrade")
+                        ->time('H:i')
+                        ->sortable(),
+                    TextColumn::make('title')
+                        ->label(__('filament.charges.fields.category'))
+                        ->formatStateUsing(fn(string $state): string => ChargeCategory::from($state)->getLabel())
+                        ->color(fn(string $state): string => ChargeCategory::from($state)->getColor())
+                        ->icon(fn(string $state): string => ChargeCategory::from($state)->getIcon()),
+                    TextColumn::make('description')
+                        ->label(__('filament.charges.fields.description'))
+                        ->searchable(),
+                    TextColumn::make('amount')
+                        ->label(__('filament.charges.fields.amount'))
+                        ->money('EUR', divideBy: 100)
+                        ->sortable(),
+                    TextColumn::make('created_at')
+                        ->dateTime()
+                        ->sortable()
+                        ->toggleable(isToggledHiddenByDefault: true),
+                    TextColumn::make('updated_at')
+                        ->dateTime()
+                        ->sortable()
+                        ->toggleable(isToggledHiddenByDefault: true),
+
+                ]),
             ])
             ->filters([
 

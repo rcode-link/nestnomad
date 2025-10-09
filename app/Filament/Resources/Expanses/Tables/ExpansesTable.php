@@ -12,6 +12,9 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\Layout\Panel;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
@@ -34,31 +37,45 @@ final class ExpansesTable
             ->modifyQueryUsing(fn($query) => $query->withSum('payment', 'amount')
                 ->whereHas('lease', fn($builder) => $builder->myLease()->with('user')))
             ->columns([
-                TextColumn::make('name')
-                    ->label(__('filament.charges.fields.category'))
-                    ->description(fn(Expanse $record) => $record->description)
-                    ->formatStateUsing(fn(string $state): string => ChargeCategory::from($state)->getLabel())
-                    ->color(fn(string $state): string => ChargeCategory::from($state)->getColor())
-                    ->icon(fn(string $state): string => ChargeCategory::from($state)->getIcon()),
-                TextColumn::make('lease.user.tenant_name')->label(__('filament.charges.fields.tenant'))->searchable(),
-                TextColumn::make('amount')
-                    ->label(__('filament.charges.fields.amount'))
-                    ->money('EUR', divideBy: 100, decimalPlaces: 2)
-                    ->sortable(),
-                TextColumn::make('payment.amount')
-                    ->label(__('filament.charges.fields.amount'))
-                    ->money('EUR', divideBy: 100, decimalPlaces: 2)
-                    ->badge(),
-                TextColumn::make('due_date')
-                    ->label(__('filament.charges.fields.due_date'))
-                    ->sortable()
-                    ->date()
-                    ->color(fn(string $state, $record) => ! $record->is_paid && Carbon::parse($state) < now() ? 'danger' : 'success'),
-                IconColumn::make('is_paid')
-                    ->label(__('filament.charges.fields.status'))
-                    ->sortable()
-                    ->icon(fn(string $state): Heroicon => $state ? Heroicon::CheckBadge : Heroicon::NoSymbol)
-                    ->color(fn(string $state): string => $state ? 'success' : 'warning'),
+                Split::make([
+                    IconColumn::make('is_paid')
+                        ->label(__('filament.charges.fields.status'))
+                        ->sortable()
+                        ->grow(false)
+                        ->icon(fn(string $state): Heroicon => $state ? Heroicon::CheckBadge : Heroicon::NoSymbol)
+                        ->color(fn(string $state): string => $state ? 'success' : 'warning'),
+
+                    TextColumn::make('lease.user.tenant_name')->label(__('filament.charges.fields.tenant'))->searchable(),
+
+                    Stack::make([
+
+                        TextColumn::make('name')
+                            ->label(__('filament.charges.fields.category'))
+                            ->description(fn(Expanse $record) => $record->description)
+                            ->formatStateUsing(fn(string $state): string => ChargeCategory::from($state)->getLabel())
+                            ->color(fn(string $state): string => ChargeCategory::from($state)->getColor())
+                            ->icon(fn(string $state): string => ChargeCategory::from($state)->getIcon()),
+                        TextColumn::make('amount')
+                            ->label(__('filament.charges.fields.amount'))
+                            ->money('EUR', divideBy: 100, decimalPlaces: 2)
+                            ->sortable(),
+
+                    ]),
+                ]),
+                Panel::make([
+                    Stack::make([
+                        TextColumn::make('payment.amount')
+                            ->label(__('filament.charges.fields.amount'))
+                            ->money('EUR', divideBy: 100, decimalPlaces: 2)
+                            ->badge(),
+
+                        TextColumn::make('due_date')
+                            ->label(__('filament.charges.fields.due_date'))
+                            ->sortable()
+                            ->date()
+                            ->color(fn(string $state, $record) => ! $record->is_paid && Carbon::parse($state) < now() ? 'danger' : 'success'),
+                    ]),
+                ])->collapsible(),
             ])
             ->filters([
                 SelectFilter::make('active_bills')
