@@ -50,4 +50,6 @@ return [
     ],
     'SignIn' => "Sign In",
     'SignUp' => "Sign Up",
+    "description" => "Tenex simplifies property management and communication between landlords and tenants. Manage listings, track expenses, handle billing, resolve issues, and streamline leases—all in one platform.",
+    "keywords" => "property management, landlord software, tenant platform, rental management, expense tracking, lease management, billing, landlord-tenant communication",
 ];

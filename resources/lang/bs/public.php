@@ -55,4 +55,8 @@ return [
         ],
 
     ],
+    'SignIn' => "Uloguj se",
+    'SignUp' => "Registruj se",
+    "description" => "Tenex pojednostavljuje upravljanje nekretninama i komunikaciju između vlasnika i stanara. Upravljajte smještajem, pratite troškove, vodite računa o obračunima, rješavajte probleme i upravljajte zakupima—sve na jednom mjestu.",
+    "keywords" => "upravljanje nekretninama, softver za vlasnike, platforma za stanare, zakup, praćenje troškova, obračuni, komunikacija vlasnik-stanar",
 ];
