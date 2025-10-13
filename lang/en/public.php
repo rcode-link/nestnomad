@@ -48,4 +48,6 @@ return [
             ],
         ],
     ],
+    'SignIn' => "Sign In",
+    'SignUp' => "Sign Up",
 ];
