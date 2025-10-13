@@ -40,11 +40,11 @@
                             class="w-10 text-white"
                         />
                     </div>
-                    <h4
+                    <h1
                         class="mb-3 text-xl font-bold text-dark dark:text-white"
                     >
                         @lang("public.features.property.title")
-                    </h4>
+                    </h1>
                     <p class="mb-8 text-body-color dark:text-dark-6 lg:mb-9">
                         @lang("public.features.property.description")
                     </p>
@@ -68,11 +68,11 @@
                             class="w-10 text-white"
                         />
                     </div>
-                    <h4
+                    <h1
                         class="mb-3 text-xl font-bold text-dark dark:text-white"
                     >
                         @lang("public.features.lease.title")
-                    </h4>
+                    </h1>
                     <p class="mb-8 text-body-color dark:text-dark-6 lg:mb-9">
                         @lang("public.features.lease.description")
                     </p>
@@ -95,11 +95,11 @@
                             class="w-10 text-white"
                         />
                     </div>
-                    <h4
+                    <h1
                         class="mb-3 text-xl font-bold text-dark dark:text-white"
                     >
                         @lang("public.features.issues.title")
-                    </h4>
+                    </h1>
                     <p class="mb-8 text-body-color dark:text-dark-6 lg:mb-9">
                         @lang("public.features.issues.description")
                     </p>
@@ -122,11 +122,11 @@
                             class="w-10 text-white"
                         />
                     </div>
-                    <h4
+                    <h1
                         class="mb-3 text-xl font-bold text-dark dark:text-white"
                     >
                         @lang("public.features.charges.title")
-                    </h4>
+                    </h1>
                     <p class="mb-8 text-body-color dark:text-dark-6 lg:mb-9">
                         @lang("public.features.charges.description")
                     </p>
