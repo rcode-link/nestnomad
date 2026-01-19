@@ -16,6 +16,7 @@ return [
             'name' => 'Name',
             'address' => 'Address',
             'city' => 'City',
+            'public' => 'The property is visible to public',
             'country' => 'Country',
             'postal_code' => 'Postal Code',
             'description' => 'Description',

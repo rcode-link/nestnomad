@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Properties\Tables;
 
+use App\Filament\Infolists\Components\MaxBoxEntery;
 use App\Models\Property;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -22,10 +23,13 @@ final class PropertiesTable
                 'xl' => 3,
             ])
             ->columns([
-                Stack::make([TextColumn::make('name')
-                    ->label(__('filament.properties.fields.name'))
-                    ->description(fn(Property $record): string => $record->address['placeName'])
-                    ->sortable(),
+                Stack::make([
+
+                    //                    MaxBoxEntery::make('address'),
+                    TextColumn::make('name')
+                        ->label(__('filament.properties.fields.name'))
+                        ->description(fn(Property $record): string => $record->address['placeName'])
+                        ->sortable(),
                     TextColumn::make('lease.user.tenant_name')
                         ->label(__('filament.common.relations.tenants'))
                         ->badge()

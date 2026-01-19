@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * @property int $id
@@ -49,11 +50,20 @@ final class Property extends Model implements HasMedia
 
     use InteractsWithMedia;
 
-    protected $fillable = ['name', 'address'];
+    protected $fillable = ['name', 'address', 'public'];
 
     protected $casts = [
         'address' => 'json',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('gallery')
+            ->registerMediaConversions(function (Media $media): void {
+                $this->addMediaCollection('thumb')
+                    ->width(300);
+            });
+    }
 
     public function users(): BelongsToMany
     {
@@ -62,9 +72,7 @@ final class Property extends Model implements HasMedia
 
     public function lease(): HasMany
     {
-
         return $this->hasMany(Lease::class);
-
     }
 
     #[Scope]
