@@ -141,7 +141,12 @@ final class User extends Authenticatable implements FilamentUser, HasMedia, Comm
 
     public function property(): BelongsToMany
     {
-        return $this->belongsToMany(Property::class, 'user_property');
+        return $this->belongsToMany(Property::class, 'user_property')->withPivot('role');
+    }
+
+    public function isOwnerOf(Property $property): bool
+    {
+        return $this->property()->wherePivot('role', 'owner')->where('property_id', $property->id)->exists();
     }
 
     /**

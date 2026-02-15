@@ -20,6 +20,20 @@
                         >
                             @lang("public.home.description", ["name" => config("app.name")])
                         </p>
+                        <div class="flex flex-wrap items-center justify-center gap-4 mb-10">
+                            <a
+                                href="/app/register"
+                                class="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-primary bg-white rounded-md hover:bg-gray-100 transition duration-300"
+                            >
+                                @lang("public.home.cta_start")
+                            </a>
+                            <a
+                                href="#features"
+                                class="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white border border-white rounded-md hover:bg-white/10 transition duration-300 ud-menu-scroll"
+                            >
+                                @lang("public.home.cta_learn")
+                            </a>
+                        </div>
                         <div
                             class="wow fadeInUp relative z-10 mx-auto max-w-[845px]"
                         >
@@ -45,6 +59,7 @@
             </div>
         </div>
     </div>
+    @include("landing.sections.how-it-works")
     @include("landing.sections.features")
     @include("landing.sections.pricing")
     @include("landing.sections.contact")

@@ -50,7 +50,7 @@ final class PropertyPolicy
      */
     public function delete(User $user, Property $property): bool
     {
-        return $property->whereHas('users', fn(Builder $builder) => $builder->where('user_id', $user->id))->count() > 0;
+        return $user->isOwnerOf($property);
     }
 
     /**
@@ -58,8 +58,7 @@ final class PropertyPolicy
      */
     public function restore(User $user, Property $property): bool
     {
-
-        return $property->whereHas('users', fn(Builder $builder) => $builder->where('user_id', $user->id))->count() > 0;
+        return $user->isOwnerOf($property);
     }
 
     /**
@@ -67,6 +66,6 @@ final class PropertyPolicy
      */
     public function forceDelete(User $user, Property $property): bool
     {
-        return $property->whereHas('users', fn(Builder $builder) => $builder->where('user_id', $user->id))->count() > 0;
+        return $user->isOwnerOf($property);
     }
 }

@@ -28,6 +28,26 @@ return [
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'floor' => 'Floor',
+            'size' => 'Size',
+            'rooms' => 'Rooms',
+            'heating' => 'Heating',
+            'furnished' => 'Furnished',
+            'parking' => 'Parking',
+            'elevator' => 'Elevator',
+            'balcony' => 'Balcony',
+            'year_built' => 'Year Built',
+        ],
+        'sections' => [
+            'details' => 'Property Details',
+            'amenities' => 'Amenities',
+        ],
+        'heating' => [
+            'central' => 'Central Heating',
+            'gas' => 'Gas',
+            'electric' => 'Electric',
+            'wood' => 'Wood',
+            'heat_pump' => 'Heat Pump',
         ],
         'actions' => [
             'create' => 'Create Property',
@@ -114,6 +134,19 @@ return [
         ],
     ],
 
+    'managers' => [
+        'title' => 'Managers',
+        'single' => 'Manager',
+        'fields' => [
+            'name' => 'Name',
+            'email' => 'Email',
+        ],
+        'actions' => [
+            'add' => 'Add Manager',
+            'remove' => 'Remove',
+        ],
+    ],
+
     'charges' => [
         'title' => 'Tenant Charges',
         'single' => 'Charge',
@@ -196,6 +229,7 @@ return [
             'charges' => 'Charges',
             'leases' => 'Leases',
             'properties' => 'Properties',
+            'managers' => 'Managers',
         ],
         'messages' => [
             'created' => 'Created successfully',

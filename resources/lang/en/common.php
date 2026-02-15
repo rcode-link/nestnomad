@@ -6,4 +6,5 @@ return [
     "postponed" => "Postponed",
     "done" => "Done",
     "Issues" => "Issues",
+    "manager" => "Manager",
 ];

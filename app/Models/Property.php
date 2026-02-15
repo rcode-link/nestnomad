@@ -50,10 +50,19 @@ final class Property extends Model implements HasMedia
 
     use InteractsWithMedia;
 
-    protected $fillable = ['name', 'address', 'public'];
+    protected $fillable = [
+        'name', 'address', 'public',
+        'floor', 'size', 'rooms', 'bathrooms', 'heating',
+        'furnished', 'parking', 'elevator', 'balcony',
+        'year_built', 'description',
+    ];
 
     protected $casts = [
         'address' => 'json',
+        'furnished' => 'boolean',
+        'parking' => 'boolean',
+        'elevator' => 'boolean',
+        'balcony' => 'boolean',
     ];
 
     public function registerMediaCollections(): void
@@ -67,7 +76,17 @@ final class Property extends Model implements HasMedia
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_property');
+        return $this->belongsToMany(User::class, 'user_property')->withPivot('role');
+    }
+
+    public function owners(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_property')->withPivot('role')->wherePivot('role', 'owner');
+    }
+
+    public function managers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_property')->withPivot('role')->wherePivot('role', 'manager');
     }
 
     public function lease(): HasMany

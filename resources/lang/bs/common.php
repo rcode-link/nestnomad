@@ -6,4 +6,5 @@ return [
     "postponed" => "Odgođeno",
     "done" => "Završeno",
     "Issues" => "Problemi",
+    "manager" => "Upravitelj",
 ];

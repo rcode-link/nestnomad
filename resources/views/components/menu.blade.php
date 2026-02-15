@@ -20,7 +20,7 @@
     <div class="container px-4 mx-auto">
         <div class="relative flex items-center justify-between -mx-4">
             <div class="max-w-full px-4 w-60">
-                <a href="index.html" class="block w-full py-5 navbar-logo">
+                <a href="/" class="block w-full py-5 navbar-logo">
                     <img
                         src="/svg/logo.svg"
                         alt="{{ config("app.name") }}"
@@ -60,45 +60,53 @@
                         :class="{'hidden': !open, 'text-black dark:text-white lg:text-white': atTop}"
                     >
                         <ul
-                            class="block lg:flex 2xl:ml-20"
+                            class="block lg:flex"
                             @click="open = false"
                         >
                             <li class="relative group">
                                 <a
-                                    href="#home"
-                                    class="flex py-2 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10"
+                                    href="/#home"
+                                    class="flex py-2 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-3 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-dark dark:lg:group-hover:text-white lg:group-hover:opacity-70"
                                 >
                                     @lang("public.menu.home")
                                 </a>
                             </li>
                             <li class="relative group">
                                 <a
-                                    href="#features"
-                                    class="flex py-2 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10"
+                                    href="/#features"
+                                    class="flex py-2 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-3 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-dark dark:lg:group-hover:text-white lg:group-hover:opacity-70"
                                 >
                                     @lang("public.menu.features")
                                 </a>
                             </li>
                             <li class="relative group">
                                 <a
-                                    href="#price"
-                                    class="flex py-2 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10"
+                                    href="/#price"
+                                    class="flex py-2 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-3 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-dark dark:lg:group-hover:text-white lg:group-hover:opacity-70"
                                 >
                                     @lang("public.menu.price")
                                 </a>
                             </li>
                             <li class="relative group shadow sm:shadow-none">
                                 <a
-                                    href="#contact"
-                                    class="flex py-2 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10"
+                                    href="/#contact"
+                                    class="flex py-2 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-3 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-dark dark:lg:group-hover:text-white lg:group-hover:opacity-70"
                                 >
                                     @lang("public.menu.contact")
+                                </a>
+                            </li>
+                            <li class="relative group">
+                                <a
+                                    href="/properties"
+                                    class="flex py-2 mx-8 text-base font-medium group-hover:text-primary lg:ml-3 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-dark dark:lg:group-hover:text-white lg:group-hover:opacity-70"
+                                >
+                                    @lang("public.menu.properties")
                                 </a>
                             </li>
                             <li class="sm:hidden">
                                 <a
                                     href="/app"
-                                    class="flex py-2 mt-4 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10"
+                                    class="flex py-2 mt-4 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-3 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-dark dark:lg:group-hover:text-white lg:group-hover:opacity-70"
                                 >
                                     @lang("public.SignIn")
                                 </a>
@@ -106,7 +114,7 @@
                             <li class="sm:hidden">
                                 <a
                                     href="/app/register"
-                                    class="flex py-2 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-7 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-white lg:group-hover:opacity-70 xl:ml-10"
+                                    class="flex py-2 mx-8 text-base font-medium ud-menu-scroll group-hover:text-primary lg:ml-3 lg:mr-0 lg:inline-flex lg:px-0 lg:py-6 lg:group-hover:text-dark dark:lg:group-hover:text-white lg:group-hover:opacity-70"
                                 >
                                     @lang("public.SignUp")
                                 </a>

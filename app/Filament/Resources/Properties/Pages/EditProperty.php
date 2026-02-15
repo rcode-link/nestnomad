@@ -20,7 +20,8 @@ final class EditProperty extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->visible(fn () => auth()->user()->isOwnerOf($this->record)),
         ];
     }
 }

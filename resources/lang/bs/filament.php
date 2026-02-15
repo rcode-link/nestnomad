@@ -16,6 +16,7 @@ return [
             'name' => 'Naziv',
             'address' => 'Adresa',
             'city' => 'Grad',
+            'public' => 'Nekretnina je vidljiva javno',
             'country' => 'Zemlja',
             'postal_code' => 'Poštanski broj',
             'description' => 'Opis',
@@ -27,6 +28,26 @@ return [
             'status' => 'Status',
             'created_at' => 'Kreirano',
             'updated_at' => 'Ažurirano',
+            'floor' => 'Sprat',
+            'size' => 'Površina',
+            'rooms' => 'Sobe',
+            'heating' => 'Grijanje',
+            'furnished' => 'Namješteno',
+            'parking' => 'Parking',
+            'elevator' => 'Lift',
+            'balcony' => 'Balkon',
+            'year_built' => 'Godina izgradnje',
+        ],
+        'sections' => [
+            'details' => 'Detalji nekretnine',
+            'amenities' => 'Pogodnosti',
+        ],
+        'heating' => [
+            'central' => 'Centralno grijanje',
+            'gas' => 'Plin',
+            'electric' => 'Električno',
+            'wood' => 'Drva',
+            'heat_pump' => 'Toplotna pumpa',
         ],
         'actions' => [
             'create' => 'Kreiraj nekretninu',
@@ -109,6 +130,19 @@ return [
             'edit' => 'Izmijeni stanara',
             'view' => 'Prikaži stanara',
             'delete' => 'Obriši stanara',
+        ],
+    ],
+
+    'managers' => [
+        'title' => 'Upravitelji',
+        'single' => 'Upravitelj',
+        'fields' => [
+            'name' => 'Ime',
+            'email' => 'E-pošta',
+        ],
+        'actions' => [
+            'add' => 'Dodaj upravitelja',
+            'remove' => 'Ukloni',
         ],
     ],
 
@@ -204,6 +238,7 @@ return [
             'charges' => 'Obračuni',
             'leases' => 'Zakupi',
             'properties' => 'Nekretnine',
+            'managers' => 'Upravitelji',
         ],
     ],
 

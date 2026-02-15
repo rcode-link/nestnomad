@@ -22,7 +22,7 @@ final class CreateProperty extends CreateRecord
         try {
             DB::beginTransaction();
             $model = static::getModel()::create($data);
-            $model->users()->attach(auth()->id());
+            $model->users()->attach(auth()->id(), ['role' => 'owner']);
             DB::commit();
             session()->forget('my_property_id');
             return $model;

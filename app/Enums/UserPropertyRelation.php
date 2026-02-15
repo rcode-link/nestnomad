@@ -7,6 +7,7 @@ use Filament\Support\Contracts\HasLabel;
 enum UserPropertyRelation: string implements HasLabel
 {
     case owner = "owner";
+    case manager = "manager";
     case tenant = "tenant";
 
     public static function names(): array

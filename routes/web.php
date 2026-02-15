@@ -3,6 +3,7 @@
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Models\Property;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,27 @@ Route::get('/', function () {
     ]);
     return view('landing.index');
 })->name('landing');
+
+Route::get('/properties', function () {
+    $lang = session("lang", 'en');
+    App::setLocale($lang);
+    view()->share([
+        'lanuage' => $lang,
+    ]);
+    return view('landing.properties');
+})->name('properties');
+
+Route::get('/properties/{property}', function (Property $property) {
+    abort_unless($property->public, 404);
+
+    $lang = session("lang", 'en');
+    App::setLocale($lang);
+    view()->share([
+        'lanuage' => $lang,
+    ]);
+    $property->load('media');
+    return view('landing.property-show', compact('property'));
+})->name('properties.show');
 
 Route::get('/lang/{lang}', function ($lang) {
     $languages = config('app.available_locales');
