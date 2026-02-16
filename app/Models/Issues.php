@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use LakM\Commenter\Concerns\Commentable;
-use LakM\Commenter\Contracts\CommentableContract;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -22,7 +21,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \LakM\Commenter\Models\Comment> $comments
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
  * @property-read int|null $media_count
@@ -43,9 +42,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @method static Builder<static>|Issues whereUserId($value)
  * @mixin \Eloquent
  */
-final class Issues extends Model implements CommentableContract, HasMedia
+final class Issues extends Model implements HasMedia
 {
-    use Commentable;
     /* @use HasFactory<IssuesFactory>*/
     use HasFactory;
     use InteractsWithMedia;
@@ -57,6 +55,11 @@ final class Issues extends Model implements CommentableContract, HasMedia
         'title',
         'content',
     ];
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable')->latest();
+    }
 
     public function property(): BelongsTo
     {

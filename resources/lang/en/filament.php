@@ -289,6 +289,15 @@ return [
         'terms_required' => 'You must accept the Terms and Conditions and Privacy Policy.',
     ],
 
+    'comments' => [
+        'title' => 'Comments',
+        'placeholder' => 'Write a comment...',
+        'add' => 'Add Comment',
+        'no_comments' => 'No comments yet.',
+        'confirm_delete' => 'Are you sure you want to delete this comment?',
+        'unknown_user' => 'Unknown User',
+    ],
+
     'recurring_charges' => [
         'fields' => [
             'interval' => 'Interval',

@@ -288,6 +288,15 @@ return [
         'terms_required' => 'Morate prihvatiti Uslove korištenja i Politiku privatnosti.',
     ],
 
+    'comments' => [
+        'title' => 'Komentari',
+        'placeholder' => 'Napišite komentar...',
+        'add' => 'Dodaj komentar',
+        'no_comments' => 'Nema komentara.',
+        'confirm_delete' => 'Da li ste sigurni da želite obrisati ovaj komentar?',
+        'unknown_user' => 'Nepoznat korisnik',
+    ],
+
     'recurring_charges' => [
         'fields' => [
             'interval' => 'Interval',

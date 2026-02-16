@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
-use LakM\Commenter\Concerns\Commenter;
-use LakM\Commenter\Contracts\CommenterContract;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -27,7 +25,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \LakM\Commenter\Models\Comment> $comments
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, Media> $media
  * @property-read int|null $media_count
@@ -35,8 +33,6 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Property> $property
  * @property-read int|null $property_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \LakM\Commenter\Models\Reaction> $reactions
- * @property-read int|null $reactions_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
@@ -51,9 +47,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @method static Builder<static>|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-final class User extends Authenticatable implements FilamentUser, HasMedia, CommenterContract
+final class User extends Authenticatable implements FilamentUser, HasMedia
 {
-    use Commenter;
     /** @use HasFactory<UserFactory> */
     use HasFactory;
     use InteractsWithMedia;

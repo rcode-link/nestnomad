@@ -1,8 +1,5 @@
-@commenterStyles
-@commenterScripts
-
 <x-dynamic-component :component="$getEntryWrapperView()" :entry="$entry">
     <div {{ $getExtraAttributeBag() }}>
-        <x-commenter::index :model="$getRecord()" />
+        <livewire:issue-comments :issue="$getRecord()" />
     </div>
 </x-dynamic-component>
