@@ -283,6 +283,11 @@ return [
         ],
     ],
 
+    'register' => [
+        'terms' => 'Prihvatam <a href=":terms_url" target="_blank" class="font-semibold underline text-primary-600 hover:text-primary-500">Uslove korištenja</a> i <a href=":privacy_url" target="_blank" class="font-semibold underline text-primary-600 hover:text-primary-500">Politiku privatnosti</a>',
+        'terms_required' => 'Morate prihvatiti Uslove korištenja i Politiku privatnosti.',
+    ],
+
     'recurring_charges' => [
         'fields' => [
             'interval' => 'Interval',

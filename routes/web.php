@@ -39,6 +39,20 @@ Route::get('/properties/{property}', function (Property $property) {
     return view('landing.property-show', compact('property'));
 })->name('properties.show');
 
+Route::get('/terms', function () {
+    $lang = session("lang", 'en');
+    App::setLocale($lang);
+    view()->share(['lanuage' => $lang]);
+    return view('landing.terms');
+})->name('terms');
+
+Route::get('/privacy', function () {
+    $lang = session("lang", 'en');
+    App::setLocale($lang);
+    view()->share(['lanuage' => $lang]);
+    return view('landing.privacy');
+})->name('privacy');
+
 Route::get('/lang/{lang}', function ($lang) {
     $languages = config('app.available_locales');
     session(['lang' => isset($languages[$lang]) ? $lang : config('app.locale')]);

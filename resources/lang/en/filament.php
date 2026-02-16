@@ -284,6 +284,11 @@ return [
         ],
     ],
 
+    'register' => [
+        'terms' => 'I agree to the <a href=":terms_url" target="_blank" class="font-semibold underline text-primary-600 hover:text-primary-500">Terms and Conditions</a> and <a href=":privacy_url" target="_blank" class="font-semibold underline text-primary-600 hover:text-primary-500">Privacy Policy</a>',
+        'terms_required' => 'You must accept the Terms and Conditions and Privacy Policy.',
+    ],
+
     'recurring_charges' => [
         'fields' => [
             'interval' => 'Interval',

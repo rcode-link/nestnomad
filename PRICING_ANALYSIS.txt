@@ -1,0 +1,128 @@
+NestNomad Pricing Strategy Analysis
+=====================================
+
+1. PRICING MODEL OVERVIEW
+-------------------------
+
+  Plan          Price        Properties    Extra Properties
+  ----          -----        ----------    ----------------
+  Free          €0/mo        1             N/A
+  Standard      €12/mo       Up to 3       +€5/mo per extra property
+  Pro           €39/mo       Unlimited     N/A
+
+All plans include full feature access: lease management, expense tracking,
+issue management, payment confirmation, and tenant/landlord collaboration.
+
+
+2. FREE TIER RATIONALE
+-----------------------
+
+- 1 property is enough for a landlord with a single apartment to fully
+  experience the product with real data.
+- No feature gating — users get the complete product. The only limit is
+  the number of properties. This avoids the frustrating "upgrade to unlock"
+  experience and lets users fall in love with the platform.
+- Converts to paid naturally when the user acquires a second property.
+
+
+3. STANDARD TIER (€12/mo) RATIONALE
+-------------------------------------
+
+- €12/mo is low enough that someone with 2-3 properties doesn't hesitate.
+  It's priced below the "needs manager approval" threshold for individuals.
+- The +€5/mo per extra property add-on creates a smooth scaling curve:
+    - 3 properties: €12/mo (base)
+    - 4 properties: €12 + (1 x €5) = €17/mo
+    - 5 properties: €12 + (2 x €5) = €22/mo
+    - 6 properties: €12 + (3 x €5) = €27/mo
+    - 7 properties: €12 + (4 x €5) = €32/mo
+    - 8 properties: €12 + (5 x €5) = €37/mo
+    - 9 properties: €12 + (6 x €5) = €42/mo  <-- Pro becomes cheaper
+- This add-on model means users pay proportionally to value received,
+  and it creates a natural upgrade pressure toward Pro.
+
+
+4. PRO TIER (€39/mo) RATIONALE
+--------------------------------
+
+- The break-even point vs Standard + extras is 9 properties:
+    - At 8 properties: Standard = €12 + (5 x €5) = €37/mo vs Pro = €39/mo
+    - At 9 properties: Standard = €12 + (6 x €5) = €42/mo vs Pro = €39/mo
+- So at 9+ properties, Pro becomes the obvious better deal.
+- This is a good crossover point — users with 9+ properties are typically
+  serious landlords or small agencies who get significant value from
+  the platform and are ready for an unlimited plan.
+- Includes priority support as an extra incentive.
+
+
+5. STANDARD → PRO SWITCH ANALYSIS
+-----------------------------------
+
+  Properties    Standard Cost    Pro Cost    Savings with Pro
+  ----------    -------------    --------    ----------------
+  3             €12              €39         Standard saves €27
+  4             €17              €39         Standard saves €22
+  5             €22              €39         Standard saves €17
+  6             €27              €39         Standard saves €12
+  7             €32              €39         Standard saves €7
+  8             €37              €39         Standard saves €2
+  9             €42              €39         Pro saves €3       <-- SWITCH POINT
+  10            €47              €39         Pro saves €8
+  15            €72              €39         Pro saves €33
+  20            €97              €39         Pro saves €58
+
+Users will start seriously considering Pro at 7-8 properties (only €2-7
+difference). At 9 properties the switch becomes a no-brainer.
+
+
+6. UPGRADE FUNNEL
+-----------------
+
+  Free (1 property)
+    |
+    |  User acquires 2nd property
+    v
+  Standard (€12/mo, up to 3 properties)
+    |
+    |  User grows beyond 3 properties, add-on costs accumulate
+    |  At 7-8 properties, Pro is nearly the same price
+    v
+  Pro (€39/mo, unlimited)
+
+Each transition is natural and value-driven. Users never feel forced —
+they upgrade because the math makes sense.
+
+
+7. KEY PRINCIPLES
+-----------------
+
+- Gate on PROPERTIES, not features. Properties are the natural scaling
+  dimension for property management and directly correlate with value.
+
+- Keep the free tier generous on features. Let users experience everything.
+  The constraint is quantity (1 property), not quality.
+
+- The add-on pricing (+€5/property) is the key differentiator of this model.
+  It captures revenue from users between 3-8 properties who aren't ready
+  for Pro, while naturally funneling larger users to the unlimited plan.
+
+- Annual pricing (optional future addition): offer ~15-20% discount for
+  annual billing to improve retention and cash flow.
+    - Standard: €12/mo -> ~€120/yr (€10/mo effective)
+    - Pro: €39/mo -> ~€390/yr (€32.50/mo effective)
+
+
+8. REGIONAL PRICING CONSIDERATION
+-----------------------------------
+
+Since the platform supports Bosnian, Serbian (Latin & Cyrillic), consider
+offering adjusted pricing for the Balkan market where purchasing power
+is lower. Possible regional rates:
+
+  Plan          Global        Balkan Market
+  ----          ------        -------------
+  Free          €0            €0
+  Standard      €12/mo        €6-8/mo
+  Pro           €39/mo        €19-25/mo
+
+This can be implemented via geo-IP detection or manual country selection.

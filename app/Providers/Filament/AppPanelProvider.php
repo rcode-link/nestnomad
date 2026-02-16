@@ -13,6 +13,8 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\HtmlString;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -31,17 +33,21 @@ final class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('app')
             ->login()
-            ->registration()
+            ->registration(\App\Filament\Pages\Auth\Register::class)
             ->passwordReset()
             ->emailVerification()
             ->profile()
-            ->registration()
-            ->passwordReset()
-            ->emailVerification()
             ->emailChangeVerification()
 
+            ->favicon('/favicon.svg')
+            ->brandLogo('/favicon.svg')
+            ->brandLogoHeight('2.5rem')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#3758f9'),
+                'danger' => Color::Rose,
+                'success' => Color::hex('#13c296'),
+                'warning' => Color::Amber,
+                'info' => Color::hex('#3758f9'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -70,6 +76,10 @@ final class AppPanelProvider extends PanelProvider
             ])
             ->userMenuItems([
                 'language-switcher' => LanguageSwitcher::make(),
-            ]);
+            ])
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): HtmlString => new HtmlString('<script defer src="https://cloud.umami.is/script.js" data-website-id="800b6c5e-9eb9-4284-8cc5-aee6b2723517"></script>'),
+            );
     }
 }

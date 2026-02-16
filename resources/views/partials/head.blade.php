@@ -12,5 +12,6 @@
 <meta name="description" content="@lang('public.description')">
 <meta name="keywords" content="@lang("public.keywords")">
 
+<script defer src="https://cloud.umami.is/script.js" data-website-id="800b6c5e-9eb9-4284-8cc5-aee6b2723517"></script>
 @vite(["resources/css/app.css", "resources/js/app.js"])
 @fluxAppearance

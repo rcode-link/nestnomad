@@ -20,12 +20,14 @@
     <div class="container px-4 mx-auto">
         <div class="relative flex items-center justify-between -mx-4">
             <div class="max-w-full px-4 w-60">
-                <a href="/" class="block w-full py-5 navbar-logo">
-                    <img
-                        src="/svg/logo.svg"
-                        alt="{{ config("app.name") }}"
-                        :class="{'text-dark dark:text-white': !atTop}"
-                    />
+                <a href="/" class="block w-full py-5 navbar-logo" :class="{'text-dark dark:text-white': !atTop, 'text-white': atTop}">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="{{ config("app.name") }}">
+                        <path d="M20 6L3 20" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M20 6L37 20" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="14" cy="30" r="3" fill="currentColor"/>
+                        <circle cx="26" cy="30" r="3" fill="currentColor"/>
+                        <rect x="14" y="28.8" width="12" height="2.4" fill="currentColor"/>
+                    </svg>
                 </a>
             </div>
 
