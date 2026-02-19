@@ -32,10 +32,10 @@ final class ExpansesTable
             ->groups([
                 Group::make('lease_month')
                     ->label(__('filament.charges.fields.tenant'))
-                    ->getTitleFromRecordUsing(fn(Expanse $record): string => $record->lease->user->pluck('tenant_name')->join(',') ?? 'Unknown')
-                    ->getDescriptionFromRecordUsing(fn(Expanse $record): string => Carbon::parse($record->due_date)->format('F Y'))
-                    ->getKeyFromRecordUsing(fn(Expanse $record): string => $record->lease_id . '_' . Carbon::parse($record->due_date)->format('Y_m'))
-                    ->orderQueryUsing(fn($query, string $direction) => $query->orderBy('lease_id', $direction)->orderBy('due_date', 'desc'))
+//                    ->getTitleFromRecordUsing(fn(Expanse $record): string => $record->lease->user->pluck('tenant_name')->join(',') ?? 'Unknown')
+                    ->getTitleFromRecordUsing(fn(Expanse $record): string => Carbon::parse($record->due_date)->format('F Y'))
+                    ->groupQueryUsing(fn(Builder $builder) => $builder->groupBy(fn(Builder $group) => Carbon::parse($group->due_date)->format('Y_m')))
+                    ->orderQueryUsing(fn($query, string $direction) =>  $query->orderBy('lease_id', $direction)->orderBy('due_date', 'desc'))
                     ->titlePrefixedWithLabel(false)
                     ->collapsible(),
             ])
