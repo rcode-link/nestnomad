@@ -2,8 +2,11 @@
 
 namespace App\Filament\Resources\Expanses\Actions;
 
+use App\Enums\ChargeCategory;
+use App\Enums\UtilityType;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Storage;
@@ -22,6 +25,11 @@ final class EditAction
                     ->step(0.01)
                     ->inputMode('decimal')
                     ->required(),
+                Select::make('utility_type')
+                    ->label(__('filament.charges.fields.utility_type'))
+                    ->options(UtilityType::getOptions())
+                    ->default(fn($record) => $record->name === ChargeCategory::UTILITIES->value ? $record->description : null)
+                    ->visible(fn($record) => $record?->name === ChargeCategory::UTILITIES->value),
                 FileUpload::make('bill')->storeFile(false),
             ])
             ->visible(fn($record) => $record->lease()->propertyOwner()->count() > 0 && ! $record->is_paid)
@@ -29,6 +37,9 @@ final class EditAction
                 function ($data, $record): void {
                     $record->update([
                         'amount' => (int) ($data['amount'] * 100),
+                        'description' => $record->name === ChargeCategory::UTILITIES->value
+                            ? ($data['utility_type'] ?? $record->description)
+                            : $record->description,
                     ]);
                     $temporaryPath = null;
                     if ($data['bill']) {

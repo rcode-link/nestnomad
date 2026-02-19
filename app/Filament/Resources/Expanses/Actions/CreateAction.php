@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Expanses\Actions;
 
 use App\Enums\ChargeCategory;
+use App\Enums\UtilityType;
 use App\Models\Expanse;
 use App\Models\Lease;
 use Filament\Actions\Action;
@@ -24,8 +25,14 @@ final class CreateAction
                 ->default(ChargeCategory::RENT->value)
                 ->live()
                 ->required(),
+            Select::make('utility_type')
+                ->label(__('filament.charges.fields.utility_type'))
+                ->options(UtilityType::getOptions())
+                ->visible(fn($get) => $get('name') === ChargeCategory::UTILITIES->value)
+                ->required(fn($get) => $get('name') === ChargeCategory::UTILITIES->value),
             TextInput::make('description')
-                ->label(__('filament.charges.fields.description')),
+                ->label(__('filament.charges.fields.description'))
+                ->hidden(fn($get) => $get('name') === ChargeCategory::UTILITIES->value),
 
             TextInput::make('amount')
                 ->label(__('filament.charges.fields.amount'))
@@ -87,7 +94,9 @@ final class CreateAction
                         'amount' => $per_lease_amount,
                         'is_private' => ! $data['share_with_tenants'] ?? false,
                         'due_date' => $data['due_date'],
-                        'description' => $data['description'],
+                        'description' => $data['name'] === ChargeCategory::UTILITIES->value
+                            ? ($data['utility_type'] ?? null)
+                            : ($data['description'] ?? null),
                     ]);
 
                     if ($data['generate_pdf']) {

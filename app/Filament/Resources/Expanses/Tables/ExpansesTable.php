@@ -3,16 +3,17 @@
 namespace App\Filament\Resources\Expanses\Tables;
 
 use App\Enums\ChargeCategory;
+use App\Enums\UtilityType;
 use App\Filament\Resources\Expanses\Actions\EditAction;
 use App\Filament\Resources\Expanses\Actions\ViewAction;
 use App\Models\Expanse;
 use Carbon\Carbon;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\Layout\Panel;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
@@ -28,14 +29,21 @@ final class ExpansesTable
     {
         return $table
             ->recordTitleAttribute('name')
-//            ->groups([
-//                Group::make('lease.user.tenant_name'),
-//                Group::make('due_date')
-//                    ->label(__('filament.charges.fields.due_date')),
-//
-//            ])
-            ->modifyQueryUsing(fn($query) => $query->withSum('payment', 'amount')
-                ->whereHas('lease', fn($builder) => $builder->myLease()->with('user')))
+            ->groups([
+                Group::make('lease_month')
+                    ->label(__('filament.charges.fields.tenant'))
+                    ->getTitleFromRecordUsing(fn(Expanse $record): string => $record->lease->user->first()?->tenant_name ?? 'Unknown')
+                    ->getDescriptionFromRecordUsing(fn(Expanse $record): string => Carbon::parse($record->due_date)->format('F Y'))
+                    ->getKeyFromRecordUsing(fn(Expanse $record): string => $record->lease_id . '_' . Carbon::parse($record->due_date)->format('Y_m'))
+                    ->orderQueryUsing(fn($query, string $direction) => $query->orderBy('lease_id', $direction)->orderBy('due_date', 'desc'))
+                    ->titlePrefixedWithLabel(false)
+                    ->collapsible(),
+            ])
+            ->defaultGroup('lease_month')
+            ->modifyQueryUsing(fn($query) => $query
+                ->withSum('payment', 'amount')
+                ->with('lease.user')
+                ->whereHas('lease', fn($builder) => $builder->myLease()))
             ->columns([
                 Split::make([
                     IconColumn::make('is_paid')
@@ -45,37 +53,45 @@ final class ExpansesTable
                         ->icon(fn(string $state): Heroicon => $state ? Heroicon::CheckBadge : Heroicon::NoSymbol)
                         ->color(fn(string $state): string => $state ? 'success' : 'warning'),
 
-                    TextColumn::make('lease.user.tenant_name')->label(__('filament.charges.fields.tenant'))->searchable(),
+                    TextColumn::make('due_date')
+                        ->label(__('filament.charges.fields.due_date'))
+                        ->date('d M')
+                        ->grow(false)
+                        ->sortable()
+                        ->color(fn(string $state, $record) => ! $record->is_paid && Carbon::parse($state) < now() ? 'danger' : 'gray'),
+
+                    TextColumn::make('name')
+                        ->label(__('filament.charges.fields.category'))
+                        ->formatStateUsing(function (string $state, Expanse $record): string {
+                            $label = ChargeCategory::from($state)->getLabel();
+                            if (! $record->description) {
+                                return $label;
+                            }
+                            $detail = $state === ChargeCategory::UTILITIES->value
+                                ? (UtilityType::tryFrom($record->description)?->getLabel() ?? $record->description)
+                                : $record->description;
+
+                            return $label . ' · ' . $detail;
+                        })
+                        ->color(fn(string $state): string => ChargeCategory::from($state)->getColor())
+                        ->icon(fn(string $state): string => ChargeCategory::from($state)->getIcon()),
 
                     Stack::make([
-
-                        TextColumn::make('name')
-                            ->label(__('filament.charges.fields.category'))
-                            ->description(fn(Expanse $record) => $record->description)
-                            ->formatStateUsing(fn(string $state): string => ChargeCategory::from($state)->getLabel())
-                            ->color(fn(string $state): string => ChargeCategory::from($state)->getColor())
-                            ->icon(fn(string $state): string => ChargeCategory::from($state)->getIcon()),
                         TextColumn::make('amount')
                             ->label(__('filament.charges.fields.amount'))
                             ->money('EUR', divideBy: 100, decimalPlaces: 2)
-                            ->sortable(),
-
-                    ]),
-                ]),
-                Panel::make([
-                    Stack::make([
-                        TextColumn::make('payment.amount')
-                            ->label(__('filament.charges.fields.amount'))
-                            ->money('EUR', divideBy: 100, decimalPlaces: 2)
-                            ->badge(),
-
-                        TextColumn::make('due_date')
-                            ->label(__('filament.charges.fields.due_date'))
                             ->sortable()
-                            ->date()
-                            ->color(fn(string $state, $record) => ! $record->is_paid && Carbon::parse($state) < now() ? 'danger' : 'success'),
-                    ]),
-                ])->collapsible(),
+                            ->extraAttributes(['class' => 'hidden md:block'])
+                            ->alignEnd(),
+
+                        TextColumn::make('remaining_balance')
+                            ->label(__('filament.charges.fields.remaining_balance'))
+                            ->state(fn(Expanse $record): int => $record->amount - (int) $record->payment_sum_amount)
+                            ->money('EUR', divideBy: 100, decimalPlaces: 2)
+                            ->color(fn(Expanse $record): string => ($record->amount - (int) $record->payment_sum_amount) > 0 ? 'danger' : 'success')
+                            ->alignEnd(),
+                    ])->grow(false)->alignEnd(),
+                ])->extraAttributes(['class' => 'flex-nowrap items-center']),
             ])
             ->filters([
                 SelectFilter::make('active_bills')
@@ -96,15 +112,16 @@ final class ExpansesTable
                         },
                     ),
             ])
-            ->defaultSort('due_date')
+            ->defaultSort('due_date', 'desc')
+            ->recordAction('view')
             ->recordActions([
+                ActionGroup::make([
                 EditAction::make(),
                 Action::make('mark_paid')
                     ->label(__('filament.charges.actions.mark_paid'))
                     ->color('success')
                     ->icon(Heroicon::CurrencyEuro)
                     ->requiresConfirmation()
-//                    ->visible($this->ownerRecord->query()->myProperty()->count() > 0)
                     ->fillForm(function (Expanse $record) {
                         $paidAmount = (int) $record->payment_sum_amount;
 
@@ -119,6 +136,7 @@ final class ExpansesTable
                             ->maxValue(function (Expanse $record) {
                                 $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
                                 $paidAmount = (int) $sum->payment_sum_amount;
+
                                 return ($record->amount - $paidAmount) / 100;
                             })
                             ->step(0.01),
@@ -132,7 +150,6 @@ final class ExpansesTable
                         }
 
                         return ! $expanse->is_paid;
-
                     })
                     ->action(function (array $data, Expanse $record): void {
                         $model = $record->payment()->create(['amount' => (int) ($data['amount'] * 100)]);
@@ -150,6 +167,7 @@ final class ExpansesTable
                         }
                     }),
                 (new ViewAction())->infolist(),
+                ])->extraAttributes(['class' => 'md:flex hidden']),
             ])
             ->toolbarActions([
             ]);

@@ -2,6 +2,10 @@
 
 namespace App\Filament\Resources\Expanses\Actions;
 
+use App\Enums\ChargeCategory;
+use Carbon\Carbon;
+use App\Enums\UtilityType;
+use App\Filament\Resources\Expanses\Actions\EditAction as ExpanseEditAction;
 use App\Models\Expanse;
 use App\Models\Payment;
 use Filament\Actions\Action;
@@ -26,6 +30,7 @@ final class ViewAction
             ->icon(Heroicon::Eye)
             ->modalSubmitAction(false)
             ->extraModalFooterActions([
+                ExpanseEditAction::make(),
                 Action::make("MarkPaid")
                     ->label(__('filament.charges.actions.mark_paid'))
                     ->visible(fn(Expanse $expanse) => $expanse->lease()->propertyOwner()->count() > 0 && ! $expanse->is_paid)
@@ -45,6 +50,34 @@ final class ViewAction
                     }),
             ])
             ->schema([
+                Grid::make(3)
+                    ->schema([
+                        TextEntry::make('name')
+                            ->label(__('filament.charges.fields.category'))
+                            ->formatStateUsing(fn(string $state): string => ChargeCategory::from($state)->getLabel())
+                            ->icon(fn(Expanse $record): string => ChargeCategory::from($record->name)->getIcon())
+                            ->color(fn(Expanse $record): string => ChargeCategory::from($record->name)->getColor()),
+
+                        TextEntry::make('due_date')
+                            ->label(__('filament.charges.fields.due_date'))
+                            ->date('d M Y')
+                            ->color(fn(Expanse $record): string => ! $record->is_paid && Carbon::parse($record->due_date)->isPast() ? 'danger' : 'gray'),
+
+                        TextEntry::make('is_paid')
+                            ->label(__('filament.charges.fields.status'))
+                            ->formatStateUsing(fn(bool $state): string => $state ? __('filament.charges.status.paid') : __('filament.charges.status.pending'))
+                            ->icon(fn(bool $state): Heroicon => $state ? Heroicon::CheckBadge : Heroicon::Clock)
+                            ->color(fn(bool $state): string => $state ? 'success' : 'warning'),
+
+                        TextEntry::make('description')
+                            ->label(__('filament.charges.fields.description'))
+                            ->formatStateUsing(fn(?string $state, Expanse $record): string => $record->name === ChargeCategory::UTILITIES->value && $state
+                                ? (UtilityType::tryFrom($state)?->getLabel() ?? $state)
+                                : ($state ?? '—'))
+                            ->columnSpanFull()
+                            ->hidden(fn(Expanse $record): bool => blank($record->description)),
+                    ]),
+
                 Grid::make(2)
                     ->schema([
                         TextEntry::make('amount')
@@ -80,24 +113,25 @@ final class ViewAction
                                     ->hiddenLabel()
                                     ->weight(FontWeight::Bold)
                                     ->money('EUR', divideBy: 100, decimalPlaces: 2),
-                                IconEntry::make('amount')
-                                    ->label(__('filament.charges.fields.receipt'))
-                                    ->alignEnd()
-                                    ->hiddenLabel()
-                                    ->icon(Heroicon::Link)
-                                    ->color(fn(Payment $record) => null !== $record->getFirstMedia('receipt') ? "info" : 'danger')
-                                    ->disabled(fn(Payment $record) => null !== $record->getFirstMedia('receipt'))
-                                    ->url(fn(Payment $record) => $record->getFirstMedia('receipt')?->getTemporaryUrl(now()->addMinutes(5)))
-                                    ->openUrlInNewTab(),
                                 TextEntry::make('created_at')
                                     ->hiddenLabel()
+                                    ->date('d M Y')
                                     ->size(TextSize::Small)
-                                    ->columnSpanFull()
-                                    ->date(),
+                                    ->color('gray'),
+                                IconEntry::make('amount')
+                                    ->hiddenLabel()
+                                    ->alignEnd()
+                                    ->icon(Heroicon::Link)
+                                    ->color('info')
+                                    ->url(fn(Payment $record) => $record->getFirstMedia('receipt')?->getTemporaryUrl(now()->addMinutes(5)))
+                                    ->openUrlInNewTab()
+                                    ->visible(fn(Payment $record) => null !== $record->getFirstMedia('receipt')),
                                 Action::make("addReceipt")
                                     ->label(__('filament.charges.actions.add_receipt'))
+                                    ->size('sm')
+                                    ->extraAttributes(['style' => 'display:block;width:fit-content;margin-left:auto'])
                                     ->schema([
-                                        FileUpload::make('receipt')->storeFile(false)->acceptedFileTypes(['image/*','application/pdf']),
+                                        FileUpload::make('receipt')->storeFile(false)->acceptedFileTypes(['image/*', 'application/pdf']),
                                     ])
                                     ->visible(fn(Payment $record) => null === $record->getFirstMedia('receipt'))
                                     ->action(function ($data, Payment $record, $livewire): void {
@@ -113,10 +147,10 @@ final class ViewAction
                                     })->after(function (Component $livewire): void {
                                         $livewire->dispatch('refreshReceipts');
                                     }),
-
                             ])
-                            ->grid(2)
-                            ->columns(2)
+                            ->columns(['default' => 3])
+                            ->contained(false)
+                            ->extraAttributes([])
                             ->columnSpanFull(),
                     ]),
             ])

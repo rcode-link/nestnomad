@@ -12,6 +12,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Support\HtmlString;
@@ -76,10 +77,18 @@ final class AppPanelProvider extends PanelProvider
             ])
             ->userMenuItems([
                 'language-switcher' => LanguageSwitcher::make(),
+                MenuItem::make()
+                    ->label('Restart Tour')
+                    ->icon('heroicon-o-academic-cap')
+                    ->url(fn () => route('tour.restart')),
             ])
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn (): HtmlString => new HtmlString('<script defer src="https://cloud.umami.is/script.js" data-website-id="800b6c5e-9eb9-4284-8cc5-aee6b2723517"></script>'),
+            )
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn () => view('filament.tour-script'),
             );
     }
 }

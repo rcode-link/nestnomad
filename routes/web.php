@@ -4,6 +4,7 @@ use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Models\Property;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +53,18 @@ Route::get('/privacy', function () {
     view()->share(['lanuage' => $lang]);
     return view('landing.privacy');
 })->name('privacy');
+
+Route::post('/app/tour-completed', function (Request $request) {
+    $request->user()->update(['tour_completed' => true]);
+
+    return response()->json(['status' => 'ok']);
+})->middleware(['web', 'auth'])->name('tour.completed');
+
+Route::get('/app/tour-restart', function (Request $request) {
+    $request->user()->update(['tour_completed' => false]);
+
+    return redirect('/app');
+})->middleware(['web', 'auth'])->name('tour.restart');
 
 Route::get('/lang/{lang}', function ($lang) {
     $languages = config('app.available_locales');

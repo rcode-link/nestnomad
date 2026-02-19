@@ -64,8 +64,8 @@ final class PropertyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            ManagersRelationManager::class,
             ExpensesRelationManager::class,
+            ManagersRelationManager::class,
             TenantsRelationManager::class,
             IssuesRelationManager::class,
         ];

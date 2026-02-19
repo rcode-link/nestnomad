@@ -1,4 +1,5 @@
 import Alpine from "alpinejs";
+import "./tour.js";
 
 window.Alpine = Alpine;
 

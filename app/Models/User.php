@@ -63,6 +63,7 @@ final class User extends Authenticatable implements FilamentUser, HasMedia
         'name',
         'email',
         'password',
+        'tour_completed',
     ];
 
     /**
@@ -154,6 +155,7 @@ final class User extends Authenticatable implements FilamentUser, HasMedia
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'tour_completed' => 'boolean',
         ];
     }
 }

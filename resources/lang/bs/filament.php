@@ -159,6 +159,8 @@ return [
             'paid_date' => 'Datum plaćanja',
             'status' => 'Status',
             'receipt' => 'Račun',
+            'remaining_balance' => 'Preostalo',
+            'utility_type' => 'Vrsta komunalije',
         ],
         'actions' => [
             'create' => 'Kreiraj obračun',
@@ -183,6 +185,18 @@ return [
             'late_fee' => 'Kamata na zakašnjenje',
             'deposit' => 'Depozit',
             'other' => 'Ostali troškovi',
+        ],
+        'utilities' => [
+            'electricity' => 'Struja',
+            'water'       => 'Voda',
+            'gas'         => 'Gas',
+            'internet'    => 'Internet',
+            'heating'     => 'Grijanje',
+            'cooling'     => 'Hlađenje / Klima',
+            'tv'          => 'TV / Kablovska',
+            'trash'       => 'Smeće / Odvoz',
+            'phone'       => 'Telefon',
+            'other'       => 'Ostale komunalije',
         ],
         'status' => [
             'pending' => 'Na čekanju',

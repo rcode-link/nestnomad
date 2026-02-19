@@ -160,6 +160,8 @@ return [
             'paid_date' => 'Paid Date',
             'status' => 'Status',
             'receipt' => 'Receipt',
+            'remaining_balance' => 'Remaining',
+            'utility_type' => 'Utility Type',
         ],
         'actions' => [
             'create' => 'Create Charge',
@@ -184,6 +186,18 @@ return [
             'late_fee' => 'Late Payment Fee',
             'deposit' => 'Security Deposit',
             'other' => 'Other Charges',
+        ],
+        'utilities' => [
+            'electricity' => 'Electricity',
+            'water'       => 'Water',
+            'gas'         => 'Gas',
+            'internet'    => 'Internet',
+            'heating'     => 'Heating',
+            'cooling'     => 'Cooling / AC',
+            'tv'          => 'TV / Cable',
+            'trash'       => 'Trash / Garbage',
+            'phone'       => 'Phone',
+            'other'       => 'Other Utility',
         ],
         'status' => [
             'pending' => 'Pending',

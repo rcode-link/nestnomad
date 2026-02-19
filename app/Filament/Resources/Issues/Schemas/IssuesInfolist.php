@@ -7,6 +7,7 @@ use App\Filament\Infolists\Components\CommentsEntry;
 use App\Filament\Resources\Properties\PropertyResource;
 use App\Models\Issues;
 use Filament\Actions\Action;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Filament\Forms\Components\Select;
 use Filament\Infolists\Components\TextEntry;
@@ -46,7 +47,36 @@ final class IssuesInfolist
                     RichContentRenderer::make($schema->getRecord()->content)
                         ->fileAttachmentsDisk('s3')
                         ->fileAttachmentsVisibility('private'),
-                    CommentsEntry::make('title')->hiddenLabel(),
+
+                    Section::make("Comments")
+                        ->contained(false)
+                        ->schema([
+                            RichEditor::make('comment_body')
+                                ->required()
+                                ->json()
+                                ->fileAttachmentsDisk('s3')
+                                ->fileAttachmentsDirectory('attachments')
+                                ->fileAttachmentsVisibility('private')
+                                ->toolbarButtons([
+                                    'paragraph' => [
+                                        'bold', 'italic', 'underline', 'link', 'attachFiles'],
+
+
+                                ])
+                                ->default(null)
+                                ->columnSpanFull(),
+
+
+                        ])->action(Action::make('submit_comment')
+                        ->label('Submit')
+                        ->action(function (array $data, $record): void {
+                            // Handle form submission (e.g., create a new comment)
+                            $record->comments()->create([
+                                'author' => $data['comment_author'],
+                                'body' => $data['comment_body'],
+                            ]);
+                        })),
+                    //CommentsEntry::make('title')->hiddenLabel(),
                 ])->columnSpan(2),
             ]);
     }
