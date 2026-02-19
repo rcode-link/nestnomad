@@ -32,7 +32,7 @@ final class ExpansesTable
             ->groups([
                 Group::make('lease_month')
                     ->label(__('filament.charges.fields.tenant'))
-                    ->getTitleFromRecordUsing(fn(Expanse $record): string => $record->lease->user->first()?->tenant_name ?? 'Unknown')
+                    ->getTitleFromRecordUsing(fn(Expanse $record): string => $record->lease->user->pluck('tenant_name')->join(',') ?? 'Unknown')
                     ->getDescriptionFromRecordUsing(fn(Expanse $record): string => Carbon::parse($record->due_date)->format('F Y'))
                     ->getKeyFromRecordUsing(fn(Expanse $record): string => $record->lease_id . '_' . Carbon::parse($record->due_date)->format('Y_m'))
                     ->orderQueryUsing(fn($query, string $direction) => $query->orderBy('lease_id', $direction)->orderBy('due_date', 'desc'))
@@ -64,7 +64,7 @@ final class ExpansesTable
                         ->label(__('filament.charges.fields.category'))
                         ->formatStateUsing(function (string $state, Expanse $record): string {
                             $label = ChargeCategory::from($state)->getLabel();
-                            if (! $record->description) {
+                            if ( ! $record->description) {
                                 return $label;
                             }
                             $detail = $state === ChargeCategory::UTILITIES->value
@@ -116,57 +116,57 @@ final class ExpansesTable
             ->recordAction('view')
             ->recordActions([
                 ActionGroup::make([
-                EditAction::make(),
-                Action::make('mark_paid')
-                    ->label(__('filament.charges.actions.mark_paid'))
-                    ->color('success')
-                    ->icon(Heroicon::CurrencyEuro)
-                    ->requiresConfirmation()
-                    ->fillForm(function (Expanse $record) {
-                        $paidAmount = (int) $record->payment_sum_amount;
+                    EditAction::make(),
+                    Action::make('mark_paid')
+                        ->label(__('filament.charges.actions.mark_paid'))
+                        ->color('success')
+                        ->icon(Heroicon::CurrencyEuro)
+                        ->requiresConfirmation()
+                        ->fillForm(function (Expanse $record) {
+                            $paidAmount = (int) $record->payment_sum_amount;
 
-                        return [
-                            'amount' => ($record->amount - $paidAmount) / 100,
-                        ];
-                    })
-                    ->schema([
-                        TextInput::make('amount')
-                            ->numeric()
-                            ->inputMode('decimal')
-                            ->maxValue(function (Expanse $record) {
-                                $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
-                                $paidAmount = (int) $sum->payment_sum_amount;
+                            return [
+                                'amount' => ($record->amount - $paidAmount) / 100,
+                            ];
+                        })
+                        ->schema([
+                            TextInput::make('amount')
+                                ->numeric()
+                                ->inputMode('decimal')
+                                ->maxValue(function (Expanse $record) {
+                                    $sum = Expanse::query()->whereId($record->id)->withSum('payment', 'amount')->first();
+                                    $paidAmount = (int) $sum->payment_sum_amount;
 
-                                return ($record->amount - $paidAmount) / 100;
-                            })
-                            ->step(0.01),
-                        FileUpload::make('receipt')->storeFile(false),
-                    ])
-                    ->visible(function (Expanse $expanse) {
-                        $paidAmount = (int) $expanse->payment_sum_amount;
+                                    return ($record->amount - $paidAmount) / 100;
+                                })
+                                ->step(0.01),
+                            FileUpload::make('receipt')->storeFile(false),
+                        ])
+                        ->visible(function (Expanse $expanse) {
+                            $paidAmount = (int) $expanse->payment_sum_amount;
 
-                        if ($expanse->amount === $paidAmount) {
-                            return false;
-                        }
+                            if ($expanse->amount === $paidAmount) {
+                                return false;
+                            }
 
-                        return ! $expanse->is_paid;
-                    })
-                    ->action(function (array $data, Expanse $record): void {
-                        $model = $record->payment()->create(['amount' => (int) ($data['amount'] * 100)]);
-                        $paidAmount = (int) $record->payment_sum_amount;
-                        $is_paid = $record->amount === $paidAmount && $record->query()->whereHas('lease', fn($query) => $query->propertyOwner())->count();
-                        $record->update(['is_paid' => $is_paid]);
-                        $temporaryPath = null;
-                        if ($data['receipt']) {
-                            $temporaryPath = $data['receipt']->store('temp', 'public');
-                            $originalName = $data['receipt']->getClientOriginalName();
-                        }
-                        if ($temporaryPath) {
-                            $model->addMediaFromDisk($temporaryPath, 'public')->preservingOriginal()->usingFileName($originalName)->toMediaCollection('receipt', 's3');
-                            Storage::delete($temporaryPath);
-                        }
-                    }),
-                (new ViewAction())->infolist(),
+                            return ! $expanse->is_paid;
+                        })
+                        ->action(function (array $data, Expanse $record): void {
+                            $model = $record->payment()->create(['amount' => (int) ($data['amount'] * 100)]);
+                            $paidAmount = (int) $record->payment_sum_amount;
+                            $is_paid = $record->amount === $paidAmount && $record->query()->whereHas('lease', fn($query) => $query->propertyOwner())->count();
+                            $record->update(['is_paid' => $is_paid]);
+                            $temporaryPath = null;
+                            if ($data['receipt']) {
+                                $temporaryPath = $data['receipt']->store('temp', 'public');
+                                $originalName = $data['receipt']->getClientOriginalName();
+                            }
+                            if ($temporaryPath) {
+                                $model->addMediaFromDisk($temporaryPath, 'public')->preservingOriginal()->usingFileName($originalName)->toMediaCollection('receipt', 's3');
+                                Storage::delete($temporaryPath);
+                            }
+                        }),
+                    (new ViewAction())->infolist(),
                 ])->extraAttributes(['class' => 'md:flex hidden']),
             ])
             ->toolbarActions([
