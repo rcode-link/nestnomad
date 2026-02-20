@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Leases\Schemas;
 
+use App\Enums\Currency;
 use App\Models\Property;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
@@ -55,6 +56,11 @@ final class LeaseForm
                                         DatePicker::make('end_of_lease')
                                             ->native(false)
                                             ->label(__('filament.leases.fields.end_date')),
+                                        Select::make('currency')
+                                            ->label(__('filament.leases.fields.currency'))
+                                            ->options(Currency::getOptions())
+                                            ->default(Currency::EUR->value)
+                                            ->required(),
                                     ]),
                                 Repeater::make('user')
                                     ->label(__('filament.leases.fields.tenant'))

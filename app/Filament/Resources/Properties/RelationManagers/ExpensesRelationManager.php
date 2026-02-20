@@ -16,6 +16,8 @@ final class ExpensesRelationManager extends RelationManager
 {
     protected static string $relationship = 'expenses';
 
+    protected static bool $isLazy = false;
+
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
         return __('filament.common.relations.charges');

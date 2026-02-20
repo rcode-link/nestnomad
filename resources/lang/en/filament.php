@@ -89,6 +89,7 @@ return [
 
             'start_date' => 'Start Date',
             'end_date' => 'End Date',
+            'currency' => 'Currency',
             'rent_amount' => 'Rent Amount',
             'deposit' => 'Deposit',
             'status' => 'Status',

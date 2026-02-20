@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -45,5 +46,8 @@ final class RecurringCharges extends Model
         'due_date_in_days',
     ];
 
-
+    public function lease(): BelongsTo
+    {
+        return $this->belongsTo(Lease::class);
+    }
 }

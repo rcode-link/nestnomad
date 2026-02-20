@@ -88,6 +88,7 @@ return [
             'tenant_name' => 'Ime stanara',
             'start_date' => 'Datum početka',
             'end_date' => 'Datum završetka',
+            'currency' => 'Valuta',
             'rent_amount' => 'Iznos kirije',
             'deposit' => 'Depozit',
             'status' => 'Status',

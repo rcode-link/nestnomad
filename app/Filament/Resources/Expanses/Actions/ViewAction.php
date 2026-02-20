@@ -123,7 +123,7 @@ final class ViewAction
                 Grid::make(2)
                     ->schema([
                         TextEntry::make('amount')
-                            ->money('EUR', divideBy: 100)
+                            ->money(fn(Expanse $record): string => $record->lease?->currency?->value ?? 'EUR', divideBy: 100)
                             ->label(__('charges.Bill'))
                             ->size(TextSize::Large)
                             ->icon(Heroicon::Link)
@@ -133,7 +133,7 @@ final class ViewAction
                             ->url(fn(Expanse $record) => $record->getFirstMedia('bill')?->getTemporaryUrl(now()->addMinutes(5)))
                             ->openUrlInNewTab(),
                         TextEntry::make('remaining_bill')
-                            ->money('EUR', divideBy: 100)
+                            ->money(fn(Expanse $record): string => $record->lease?->currency?->value ?? 'EUR', divideBy: 100)
                             ->size(TextSize::Large)
                             ->weight(FontWeight::Bold)
                             ->default(
@@ -154,7 +154,7 @@ final class ViewAction
                                 TextEntry::make('amount')
                                     ->hiddenLabel()
                                     ->weight(FontWeight::Bold)
-                                    ->money('EUR', divideBy: 100, decimalPlaces: 2),
+                                    ->money(fn(Payment $record): string => $record->expanse?->lease?->currency?->value ?? 'EUR', divideBy: 100, decimalPlaces: 2),
                                 TextEntry::make('created_at')
                                     ->hiddenLabel()
                                     ->date('d M Y')

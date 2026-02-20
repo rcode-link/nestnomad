@@ -32,10 +32,9 @@ final class ExpansesTable
             ->groups([
                 Group::make('lease_month')
                     ->label(__('filament.charges.fields.tenant'))
-//                    ->getTitleFromRecordUsing(fn(Expanse $record): string => $record->lease->user->pluck('tenant_name')->join(',') ?? 'Unknown')
                     ->getTitleFromRecordUsing(fn(Expanse $record): string => Carbon::parse($record->due_date)->format('F Y'))
                     ->groupQueryUsing(fn(Builder $builder) => $builder->groupBy(fn(Builder $group) => Carbon::parse($group->due_date)->format('Y_m')))
-                    ->orderQueryUsing(fn($query, string $direction) =>  $query->orderBy('lease_id', $direction)->orderBy('due_date', 'desc'))
+                    ->orderQueryUsing(fn($query) => $query->orderBy('due_date', 'desc'))
                     ->titlePrefixedWithLabel(false)
                     ->collapsible(),
             ])
@@ -44,11 +43,22 @@ final class ExpansesTable
                 ->withSum('payment', 'amount')
                 ->with('lease.user')
                 ->whereHas('lease', fn($builder) => $builder->myLease()))
+            ->extraAttributes(function (): array {
+                $allPaidGroups = Expanse::query()
+                    ->whereHas('lease', fn($builder) => $builder->myLease())
+                    ->get()
+                    ->groupBy(fn(Expanse $e): string => Carbon::parse($e->due_date)->format('F Y'))
+                    ->filter(fn($group): bool => $group->every(fn(Expanse $e): bool => $e->is_paid))
+                    ->keys()
+                    ->values()
+                    ->toArray();
+
+                return ['x-init' => 'collapsedGroups = ' . json_encode($allPaidGroups)];
+            })
             ->columns([
                 Split::make([
                     IconColumn::make('is_paid')
                         ->label(__('filament.charges.fields.status'))
-                        ->sortable()
                         ->grow(false)
                         ->icon(fn(string $state): Heroicon => $state ? Heroicon::CheckBadge : Heroicon::NoSymbol)
                         ->color(fn(string $state): string => $state ? 'success' : 'warning'),
@@ -57,7 +67,6 @@ final class ExpansesTable
                         ->label(__('filament.charges.fields.due_date'))
                         ->date('d M')
                         ->grow(false)
-                        ->sortable()
                         ->color(fn(string $state, $record) => ! $record->is_paid && Carbon::parse($state) < now() ? 'danger' : 'gray'),
 
                     TextColumn::make('name')
@@ -79,15 +88,14 @@ final class ExpansesTable
                     Stack::make([
                         TextColumn::make('amount')
                             ->label(__('filament.charges.fields.amount'))
-                            ->money('EUR', divideBy: 100, decimalPlaces: 2)
-                            ->sortable()
+                            ->money(fn(Expanse $record): string => $record->lease?->currency?->value ?? 'EUR', divideBy: 100, decimalPlaces: 2)
                             ->extraAttributes(['class' => 'hidden md:block'])
                             ->alignEnd(),
 
                         TextColumn::make('remaining_balance')
                             ->label(__('filament.charges.fields.remaining_balance'))
                             ->state(fn(Expanse $record): int => $record->amount - (int) $record->payment_sum_amount)
-                            ->money('EUR', divideBy: 100, decimalPlaces: 2)
+                            ->money(fn(Expanse $record): string => $record->lease?->currency?->value ?? 'EUR', divideBy: 100, decimalPlaces: 2)
                             ->color(fn(Expanse $record): string => ($record->amount - (int) $record->payment_sum_amount) > 0 ? 'danger' : 'success')
                             ->alignEnd(),
                     ])->grow(false)->alignEnd(),

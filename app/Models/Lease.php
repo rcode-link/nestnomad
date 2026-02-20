@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Currency;
 use Database\Factories\LeaseFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -54,12 +55,14 @@ final class Lease extends Model
         'user_id',
         'start_of_lease',
         'end_of_lease',
+        'currency',
         'tenant_name',
         'contract',
     ];
 
     protected $casts = [
         'contract' => 'json',
+        'currency' => Currency::class,
     ];
 
     public function user(): HasMany

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Leases\RelationManagers;
 
 use App\Enums\ChargeCategory;
 use App\Enums\DayOfWeek;
+use App\Enums\UtilityType;
 use App\Models\RecurringCharges;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -60,9 +61,16 @@ final class RecurringChargesRelationManager extends RelationManager
                     ->live()
                     ->columnSpanFull()
                     ->required(),
+                Select::make('utility_type')
+                    ->label(__('filament.charges.fields.utility_type'))
+                    ->options(UtilityType::getOptions())
+                    ->columnSpanFull()
+                    ->visible(fn(Get $get) => $get('title') === ChargeCategory::UTILITIES->value)
+                    ->required(fn(Get $get) => $get('title') === ChargeCategory::UTILITIES->value),
                 TextInput::make('description')
                     ->label(__('filament.charges.fields.description'))
                     ->columnSpanFull()
+                    ->hidden(fn(Get $get) => $get('title') === ChargeCategory::UTILITIES->value)
                     ->default(null),
                 TextInput::make('amount')
                     ->label(__('filament.charges.fields.amount'))
@@ -111,7 +119,7 @@ final class RecurringChargesRelationManager extends RelationManager
                         ->searchable(),
                     TextColumn::make('amount')
                         ->label(__('filament.charges.fields.amount'))
-                        ->money('EUR', divideBy: 100)
+                        ->money(fn(RecurringCharges $record): string => $record->lease?->currency?->value ?? 'EUR', divideBy: 100)
                         ->sortable(),
                     TextColumn::make('created_at')
                         ->dateTime()
@@ -128,10 +136,36 @@ final class RecurringChargesRelationManager extends RelationManager
 
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->mutateFormDataUsing(function (array $data): array {
+                        if ($data['title'] === ChargeCategory::UTILITIES->value) {
+                            $data['description'] = $data['utility_type'] ?? null;
+                        }
+                        unset($data['utility_type']);
+                        $data['amount'] = (int) ($data['amount'] * 100);
+
+                        return $data;
+                    }),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->mutateRecordDataUsing(function (array $data): array {
+                        if ($data['title'] === ChargeCategory::UTILITIES->value) {
+                            $data['utility_type'] = $data['description'];
+                        }
+                        $data['amount'] = $data['amount'] / 100;
+
+                        return $data;
+                    })
+                    ->mutateFormDataUsing(function (array $data): array {
+                        if ($data['title'] === ChargeCategory::UTILITIES->value) {
+                            $data['description'] = $data['utility_type'] ?? null;
+                        }
+                        unset($data['utility_type']);
+                        $data['amount'] = (int) ($data['amount'] * 100);
+
+                        return $data;
+                    }),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
