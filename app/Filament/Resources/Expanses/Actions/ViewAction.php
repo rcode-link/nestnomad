@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Grid;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\TextSize;
@@ -88,11 +89,40 @@ final class ViewAction
             ->schema([
                 Grid::make(3)
                     ->schema([
-                        TextEntry::make('lease.user')
-
-                            ->formatStateUsing(fn(UserLease $state): string => $state->tenant_name)
-                            ->badge()
-                            ->label(__('filament.leases.fields.tenant')),
+                        RepeatableEntry::make('lease.user')
+                            ->label(__('filament.common.relations.tenants'))
+                            ->schema([
+                                TextEntry::make('tenant_name')
+                                    ->hiddenLabel()
+                                    ->weight(FontWeight::Bold),
+                                TextEntry::make('contact_email')
+                                    ->hiddenLabel()
+                                    ->state(fn (UserLease $record): ?string => $record->email ?? $record->user?->email)
+                                    ->icon(Heroicon::OutlinedEnvelope)
+                                    ->copyable()
+                                    ->suffixActions([
+                                        Action::make('open_email')
+                                            ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                                            ->url(fn (UserLease $record): ?string => filled($email = $record->email ?? $record->user?->email) ? "mailto:{$email}" : null)
+                                            ->openUrlInNewTab(),
+                                    ])
+                                    ->placeholder('-'),
+                                TextEntry::make('contact_phone')
+                                    ->hiddenLabel()
+                                    ->state(fn (UserLease $record): ?string => $record->phone)
+                                    ->icon(Heroicon::OutlinedPhone)
+                                    ->copyable()
+                                    ->suffixActions([
+                                        Action::make('open_phone')
+                                            ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+                                            ->url(fn (UserLease $record): ?string => filled($record->phone) ? "tel:{$record->phone}" : null)
+                                            ->openUrlInNewTab(),
+                                    ])
+                                    ->placeholder('-'),
+                            ])
+                            ->columns(1)
+                            ->grid(2)
+                            ->columnSpanFull(),
 
                         TextEntry::make('name')
                             ->label(__('filament.charges.fields.category'))

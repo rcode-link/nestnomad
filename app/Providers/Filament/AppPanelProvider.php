@@ -3,7 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Resources\LanguageSwitcher;
-use App\Filament\Resources\Properties\Widgets\PaymentsChart;
+use App\Filament\Widgets\DashboardPropertiesWidget;
 use App\Http\Middleware\SetLocale;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -37,7 +37,7 @@ final class AppPanelProvider extends PanelProvider
             ->registration(\App\Filament\Pages\Auth\Register::class)
             ->passwordReset()
             ->emailVerification()
-            ->profile()
+            ->profile(\App\Filament\Pages\Auth\EditProfile::class)
             ->emailChangeVerification()
 
             ->favicon('/favicon.svg')
@@ -57,8 +57,7 @@ final class AppPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                PaymentsChart::class,
-
+                DashboardPropertiesWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

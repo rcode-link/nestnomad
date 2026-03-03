@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 final class ThisMonthPayments extends TableWidget
 {
+    protected static bool $isDiscovered = false;
     public function table(Table $table): Table
     {
         return ExpansesTable::configure($table)

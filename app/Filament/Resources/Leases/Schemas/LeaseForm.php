@@ -65,27 +65,42 @@ final class LeaseForm
                                 Repeater::make('user')
                                     ->label(__('filament.leases.fields.tenant'))
                                     ->relationship()
-                                    ->schema([Flex::make([
-                                        Select::make('user_id')
-                                            ->label(__('filament.leases.fields.tenant_email'))
-                                            ->grow(true)
-                                            ->searchable()
-                                            ->getSearchResultsUsing(fn(string $search): array => User::query()
-                                                ->where('email', $search)
-                                                ->limit(50)
-                                                ->pluck('email', 'id')
-                                                ->all())
-                                            ->live()
-                                            ->afterStateUpdated(fn($get, $set) => $set('tenant_name', User::find($get('user_id'))?->name))
-                                            ->getOptionLabelUsing(fn($value): ?string => User::find($value)?->email),
-                                        TextInput::make('tenant_name')
-                                            ->label(__('filament.leases.fields.tenant_name'))
-                                            ->live()
-                                            ->required()
-                                            ->readOnly(fn($get) => $get('user_id')),
-                                    ])
-                                        ->from('md')
-                                        ->verticallyAlignCenter(),
+                                    ->schema([
+                                        Flex::make([
+                                            Select::make('user_id')
+                                                ->label(__('filament.leases.fields.tenant_email'))
+                                                ->grow(true)
+                                                ->searchable()
+                                                ->getSearchResultsUsing(fn(string $search): array => User::query()
+                                                    ->where('email', $search)
+                                                    ->limit(50)
+                                                    ->pluck('email', 'id')
+                                                    ->all())
+                                                ->live()
+                                                ->afterStateUpdated(function ($get, $set) {
+                                                    $user = User::find($get('user_id'));
+                                                    $set('tenant_name', $user?->name);
+                                                    $set('email', null);
+                                                    $set('phone', $user?->phone);
+                                                })
+                                                ->getOptionLabelUsing(fn($value): ?string => User::find($value)?->email),
+                                            TextInput::make('tenant_name')
+                                                ->label(__('filament.leases.fields.tenant_name'))
+                                                ->required(),
+                                        ])
+                                            ->from('md')
+                                            ->verticallyAlignCenter(),
+                                        Flex::make([
+                                            TextInput::make('email')
+                                                ->label(__('filament.tenants.fields.email'))
+                                                ->email()
+                                                ->visible(fn ($get) => ! $get('user_id')),
+                                            TextInput::make('phone')
+                                                ->label(__('filament.profile.phone'))
+                                                ->tel(),
+                                        ])
+                                            ->from('md')
+                                            ->verticallyAlignCenter(),
                                     ]),
                             ]),
                         Tab::make('contract')

@@ -9,6 +9,7 @@ use Flowframe\Trend\{Trend, TrendValue};
 
 final class PaymentsChart extends ChartWidget
 {
+    protected static bool $isDiscovered = false;
     protected ?string $heading = null;
 
     public function getHeading(): string

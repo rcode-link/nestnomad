@@ -31,6 +31,9 @@ final class ManagersRelationManager extends RelationManager
                 TextColumn::make('email')
                     ->label(__('filament.managers.fields.email'))
                     ->searchable(),
+                TextColumn::make('phone')
+                    ->label(__('filament.profile.phone'))
+                    ->placeholder('-'),
             ])
             ->headerActions([
                 Action::make('addManager')

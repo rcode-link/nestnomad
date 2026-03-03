@@ -41,6 +41,10 @@ return [
         'sections' => [
             'details' => 'Property Details',
             'amenities' => 'Amenities',
+            'gallery' => 'Gallery',
+        ],
+        'tabs' => [
+            'details' => 'Details',
         ],
         'heating' => [
             'central' => 'Central Heating',
@@ -209,6 +213,10 @@ return [
             'pending_verification' => 'Pending Verification',
             'needs_attention' => 'Needs Attention',
         ],
+        'tabs' => [
+            'unpaid' => 'Unpaid Bills',
+            'paid' => 'Paid Bills',
+        ],
     ],
 
     'tabs' => [
@@ -322,5 +330,45 @@ return [
             'execute_at' => 'Execute At',
             'due_date_in_days' => 'Due Date (Days)',
         ],
+    ],
+
+    'profile' => [
+        'phone' => 'Phone',
+        'secondary_phone' => 'Secondary Phone',
+    ],
+
+    'add_bill' => [
+        'title' => 'Add Bill',
+        'submit' => 'Create Bill',
+        'success' => 'Bill created successfully',
+        'no_leases' => 'No active leases found for this property',
+    ],
+
+    'reviews' => [
+        'title' => 'Reviews',
+        'fields' => [
+            'reviewer' => 'Reviewer',
+            'rating' => 'Rating',
+            'comment' => 'Comment',
+            'date' => 'Date',
+        ],
+        'actions' => [
+            'create' => 'Add Review',
+        ],
+    ],
+
+    'reports' => [
+        'title' => 'Reports',
+    ],
+
+    'apartment_search' => [
+        'title' => 'Apartment Search',
+        'availability' => 'Availability',
+        'available' => 'Available',
+        'occupied' => 'Occupied',
+        'no_results' => 'No apartments found matching your criteria.',
+        'filters' => 'Filters',
+        'all_apartments' => 'All Apartments',
+        'per_month' => '/month',
     ],
 ];

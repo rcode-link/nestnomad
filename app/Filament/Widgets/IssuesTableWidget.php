@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 final class IssuesTableWidget extends TableWidget
 {
+    protected static bool $isDiscovered = false;
     protected int | string | array $columnSpan = 'full';
     public function table(Table $table): Table
     {

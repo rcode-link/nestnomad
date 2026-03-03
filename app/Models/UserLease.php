@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\UserLeaseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -36,6 +37,12 @@ final class UserLease extends Model
         'user_id',
         'lease_id',
         'tenant_name',
+        'email',
+        'phone',
     ];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

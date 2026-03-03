@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Properties\Schemas;
 use App\Filament\Forms\Components\MapboxSearch;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Fieldset;
@@ -76,6 +77,15 @@ final class PropertyForm
                 Textarea::make('description')
                     ->label(__('filament.properties.fields.description'))
                     ->rows(3)
+                    ->columnSpanFull(),
+
+                SpatieMediaLibraryFileUpload::make('gallery')
+                    ->collection('gallery')
+                    ->label(__('filament.properties.sections.gallery'))
+                    ->multiple()
+                    ->image()
+                    ->reorderable()
+                    ->disk('s3')
                     ->columnSpanFull(),
             ]);
     }

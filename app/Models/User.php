@@ -9,6 +9,8 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -62,6 +64,8 @@ final class User extends Authenticatable implements FilamentUser, HasMedia
     protected $fillable = [
         'name',
         'email',
+        'phone',
+        'secondary_phone',
         'password',
         'tour_completed',
     ];
@@ -143,6 +147,21 @@ final class User extends Authenticatable implements FilamentUser, HasMedia
     public function isOwnerOf(Property $property): bool
     {
         return $this->property()->wherePivot('role', 'owner')->where('property_id', $property->id)->exists();
+    }
+
+    public function reviewsAsLandlord(): MorphMany
+    {
+        return $this->morphMany(Review::class, 'reviewable')->where('review_type', 'landlord');
+    }
+
+    public function reviewsAsTenant(): MorphMany
+    {
+        return $this->morphMany(Review::class, 'reviewable')->where('review_type', 'tenant');
+    }
+
+    public function reviewsGiven(): HasMany
+    {
+        return $this->hasMany(Review::class);
     }
 
     /**

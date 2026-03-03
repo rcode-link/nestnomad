@@ -27,11 +27,25 @@ final class TenantsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('name')
+            ->recordTitleAttribute('tenant_name')
             ->columns([
-                TextColumn::make('tenant_name')
+                TextColumn::make('user.tenant_name')
                     ->label(__('filament.tenants.fields.first_name'))
+                    ->badge()
                     ->searchable(),
+                TextColumn::make('user.email')
+                    ->label(__('filament.tenants.fields.email'))
+                    ->placeholder('-'),
+                TextColumn::make('user.phone')
+                    ->label(__('filament.profile.phone'))
+                    ->placeholder('-'),
+                TextColumn::make('start_of_lease')
+                    ->label(__('filament.leases.fields.start_date'))
+                    ->date(),
+                TextColumn::make('end_of_lease')
+                    ->label(__('filament.leases.fields.end_date'))
+                    ->date()
+                    ->placeholder('-'),
             ])
             ->filters([
 

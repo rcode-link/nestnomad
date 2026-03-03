@@ -41,6 +41,10 @@ return [
         'sections' => [
             'details' => 'Детаљи непокретности',
             'amenities' => 'Погодности',
+            'gallery' => 'Галерија',
+        ],
+        'tabs' => [
+            'details' => 'Детаљи',
         ],
         'heating' => [
             'central' => 'Централно грејање',
@@ -208,6 +212,10 @@ return [
             'pending_verification' => 'Чека проверу',
             'needs_attention' => 'Тражи пажњу',
         ],
+        'tabs' => [
+            'unpaid' => 'Неплаћени рачуни',
+            'paid' => 'Плаћени рачуни',
+        ],
     ],
 
     'tabs' => [
@@ -321,5 +329,45 @@ return [
             'execute_at' => 'Извршити у',
             'due_date_in_days' => 'Доспеће (дани)',
         ],
+    ],
+
+    'profile' => [
+        'phone' => 'Телефон',
+        'secondary_phone' => 'Додатни телефон',
+    ],
+
+    'add_bill' => [
+        'title' => 'Додај рачун',
+        'submit' => 'Креирај рачун',
+        'success' => 'Рачун успешно креиран',
+        'no_leases' => 'Нема активних закупа за ову непокретност',
+    ],
+
+    'reviews' => [
+        'title' => 'Рецензије',
+        'fields' => [
+            'reviewer' => 'Рецензент',
+            'rating' => 'Оцена',
+            'comment' => 'Коментар',
+            'date' => 'Датум',
+        ],
+        'actions' => [
+            'create' => 'Додај рецензију',
+        ],
+    ],
+
+    'reports' => [
+        'title' => 'Извештаји',
+    ],
+
+    'apartment_search' => [
+        'title' => 'Претрага станова',
+        'availability' => 'Доступност',
+        'available' => 'Доступно',
+        'occupied' => 'Заузето',
+        'no_results' => 'Нема станова који одговарају вашим критеријумима.',
+        'filters' => 'Филтери',
+        'all_apartments' => 'Сви станови',
+        'per_month' => '/месечно',
     ],
 ];

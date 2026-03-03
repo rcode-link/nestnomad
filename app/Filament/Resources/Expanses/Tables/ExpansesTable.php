@@ -41,15 +41,15 @@ final class ExpansesTable
             ->defaultGroup('lease_month')
             ->modifyQueryUsing(fn($query) => $query
                 ->withSum('payment', 'amount')
-                ->with('lease.user')
+                ->with('lease.user.user')
                 ->whereHas('lease', fn($builder) => $builder->myLease()))
             ->extraAttributes(function (): array {
                 $allPaidGroups = Expanse::query()
                     ->whereHas('lease', fn($builder) => $builder->myLease())
-                    ->get()
-                    ->groupBy(fn(Expanse $e): string => Carbon::parse($e->due_date)->format('F Y'))
-                    ->filter(fn($group): bool => $group->every(fn(Expanse $e): bool => $e->is_paid))
-                    ->keys()
+                    ->selectRaw("DATE_FORMAT(due_date, '%Y_%m') as month_key, DATE_FORMAT(due_date, '%M %Y') as month_label, COUNT(*) as total, SUM(is_paid) as paid_count")
+                    ->groupByRaw("DATE_FORMAT(due_date, '%Y_%m'), DATE_FORMAT(due_date, '%M %Y')")
+                    ->havingRaw('COUNT(*) = SUM(is_paid)')
+                    ->pluck('month_label')
                     ->values()
                     ->toArray();
 
@@ -84,6 +84,37 @@ final class ExpansesTable
                         })
                         ->color(fn(string $state): string => ChargeCategory::from($state)->getColor())
                         ->icon(fn(string $state): string => ChargeCategory::from($state)->getIcon()),
+
+                    TextColumn::make('lease.user.tenant_name')
+                        ->label(__('filament.common.relations.tenants'))
+                        ->badge()
+                        ->grow(false)
+                        ->tooltip(function (Expanse $record): ?string {
+                            return $record->lease?->user
+                                ->map(function ($userLease) {
+                                    $lines = [$userLease->tenant_name];
+                                    $email = $userLease->email ?? $userLease->user?->email;
+                                    if ($email) $lines[] = $email;
+                                    if ($userLease->phone) $lines[] = $userLease->phone;
+
+                                    return implode("\n", $lines);
+                                })
+                                ->filter()
+                                ->join("\n---\n") ?: null;
+                        })
+                        ->copyable()
+                        ->copyableState(function (Expanse $record): string {
+                            return $record->lease?->user
+                                ->map(function ($userLease) {
+                                    $contact = collect([
+                                        $userLease->email ?? $userLease->user?->email,
+                                        $userLease->phone,
+                                    ])->filter()->join(', ');
+
+                                    return $contact ? "{$userLease->tenant_name}: {$contact}" : $userLease->tenant_name;
+                                })
+                                ->join("\n") ?? '';
+                        }),
 
                     Stack::make([
                         TextColumn::make('amount')

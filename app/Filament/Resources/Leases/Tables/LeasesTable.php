@@ -42,7 +42,20 @@ final class LeasesTable
                     ->label(__('filament.leases.fields.tenant'))
                     ->badge()
                     ->separator(', ')
-                    ->searchable(),
+                    ->searchable()
+                    ->description(function (Lease $record): ?string {
+                        return $record->user
+                            ->map(function ($userLease) {
+                                $contact = collect([
+                                    $userLease->email,
+                                    $userLease->phone,
+                                ])->filter()->join(' · ');
+
+                                return $contact ? "{$userLease->tenant_name}: {$contact}" : null;
+                            })
+                            ->filter()
+                            ->join(' | ') ?: null;
+                    }),
                 TextColumn::make('start_of_lease')
                     ->label(__('filament.leases.fields.start_date'))
                     ->date()
